@@ -1,0 +1,9 @@
+AVR base libraray
+
+This is simple library for work with hardware registers.
+All writen by gnu c preproccesor.
+For arv-gcc compiler.
+Support atmega32,16,8 mcu.
+
+Report bugs to <tohid.jk@gmail.com>.
+
