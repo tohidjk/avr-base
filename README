@@ -1,4 +1,6 @@
 AVR base libraray
+Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
+License GNU GPLv2
 
 This is simple and low level library for work with hardware registers.
 All writen by gnu c preproccesor.
