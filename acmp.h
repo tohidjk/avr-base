@@ -2,34 +2,34 @@
  * Analog comparator
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *          ACSR: analog comparator control and status register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ \+/
- *   | | | |   | |  +---- ACIS1,0: analog comparator interrupt mode
- *   | | | |   | +------- ACIC: analog comparator input capture enable
- *   | | | |   +--------- ACIE: analog comparator interrupt enable
- *   | | | +------------- ACI: analog comparator interrupt flag
- *   | | +--------------- ACO: analog compare output
- *   | +----------------- ACBG: analog comparator bandgap select
- *   +------------------- ACD: analog comparator disable
- *   
- *         SFIOR: special function IO register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   \-+-/ ^   ^ ^ ^ ^
- *     |   |   | | | +--- PSR10: prescaler reset timer/counter1&0
- *     |   |   | | +----- PSR2: prescaler Reset timer/counter2
- *     |   |   | +------- PUD: pull-up disable
- *     |   |   +--------- ACME: analog comparator multiplexer enable
- *     |   +------------- m8=ADHSM: ADC high speed mode
- *     +----------------- ADTS2,1,0: ADC auto trigger source
+ * 
+ *        ACSR: analog comparator control and status register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ \+/
+ *   | | | | | |  +---- ACIS1,0: interrupt mode
+ *   | | | | | +------- ACIC: input capture enable
+ *   | | | | +--------- ACIE: interrupt enable
+ *   | | | +----------- ACI: interrupt flag
+ *   | | +------------- ACO: output
+ *   | +--------------- ACBG: bandgap select
+ *   +----------------- ACD: disable
+ * 
+ *        SFIOR: special function IO register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   \-+-/ ^ ^ ^ ^ ^
+ *     |   | | | | +--- PSR10: prescaler reset timer/counter1&0
+ *     |   | | | +----- PSR2: prescaler Reset timer/counter2
+ *     |   | | +------- PUD: pull-up disable
+ *     |   | +--------- ACME: analog comparator multiplexer enable
+ *     |   +----------- m8=ADHSM: ADC high speed mode
+ *     +--------------- ADTS2,1,0: ADC auto trigger source
  */
 
 /*
@@ -41,15 +41,15 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
+ * 
  *   acmp_set(ACMP_BANDGAP_VREF | ACMP_INT_TOGGLE);
  *   acmp_en();
- *   
+ * 
  *   for (;;) {
  *     acmp_wait()
  *     PORTB ^= 1;
  *   }
- *   
+ * 
  *   return 0;
  * }
  * 

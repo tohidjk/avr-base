@@ -2,57 +2,57 @@
  * Timer/counter1
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *         TCCR1B: timer/counter1 control register B
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^   \-+-/ \-+-/
- *   | |     |     +----- CS12,1,0: clock select
- *   | |     +----------- WGM13,2: waveform generation mode
- *   | +----------------- ICES1: input capture edge select
- *   +------------------- ICNC1: input capture noise canceler
- *   
- *         TCCR1A: timer/counter1 control register A
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   \+/ \+/   ^ ^ \+/
- *    |   |    | |  +---- WGM11,0: waveform generation mode
- *    |   |    | +------- FOC1B: force output compare B
- *    |   |    +--------- FOC1A: force output compare A
- *    |   +-------------- COM1B1,0: compare output mode B
- *    +------------------ COM1A1,0: compare output mode A
- *   
- *          TIFR: timer/counter interrupt flag register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ ^ ^
- *   | | | |   | | | +--- TOV0: timer/counter0 overflow flag
- *   | | | |   | | +----- OCF0: timer/counter0 output compare match flag
- *   | | | |   | +------- TOV1: timer/counter1 overflow flag
- *   | | | |   +--------- OCF1B: timer/counter1 output compare match B flag
- *   | | | +------------- OCF1A: timer/counter1 output compare match A flag
- *   | | +--------------- ICF1: timer/counter1 input capture flag
- *   | +----------------- TOV2: timer/counter2 overflow flag
- *   +------------------- OCF2: timer/counter2 output compare match flag
- *   
- *         TIMSK: timer/counter interrupt mask register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ ^ ^
- *   | | | |   | | | +--- TOIE0: timer/counter0 overflow interrupt enable
- *   | | | |   | | +----- OCIE0: timer/counter0 output compare match interrupt enable
- *   | | | |   | +------- TOIE1: timer/counter1 overflow interrupt enable
- *   | | | |   +--------- OCIE1B: timer/counter1 output compare match B interrupt enable
- *   | | | +------------- OCIE1A: timer/counter1 output compare match A interrupt enable
- *   | | +--------------- TICIE1: timer/counter1 input capture interrupt enable
- *   | +----------------- TOIE2: timer/counter2 overflow interrupt enable
- *   +------------------- OCIE2: timer/counter2 output compare match interrupt enable
- *   
+ * 
+ *       TCCR1B: timer/counter1 control register B
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^   \+/ \-+-/
+ *   | |    |    +----- CS12,1,0: clock select
+ *   | |    +---------- WGM13,2: waveform generation mode
+ *   | +--------------- ICES1: input capture edge select
+ *   +----------------- ICNC1: input capture noise canceler
+ * 
+ *       TCCR1A: timer/counter1 control register A
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   \+/ \+/ ^ ^ \+/
+ *    |   |  | |  +---- WGM11,0: waveform generation mode
+ *    |   |  | +------- FOC1B: force output compare B
+ *    |   |  +--------- FOC1A: force output compare A
+ *    |   +------------ COM1B1,0: compare output mode B
+ *    +---------------- COM1A1,0: compare output mode A
+ * 
+ *        TIFR: timer/counter interrupt flag register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ ^ ^
+ *   | | | | | | | +--- TOV0: timer/counter0 overflow flag
+ *   | | | | | | +----- OCF0: timer/counter0 output compare match flag
+ *   | | | | | +------- TOV1: timer/counter1 overflow flag
+ *   | | | | +--------- OCF1B: timer/counter1 output compare match B flag
+ *   | | | +----------- OCF1A: timer/counter1 output compare match A flag
+ *   | | +------------- ICF1: timer/counter1 input capture flag
+ *   | +--------------- TOV2: timer/counter2 overflow flag
+ *   +----------------- OCF2: timer/counter2 output compare match flag
+ * 
+ *        TIMSK: timer/counter interrupt mask register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ ^ ^
+ *   | | | | | | | +--- TOIE0: timer/counter0 overflow interrupt enable
+ *   | | | | | | +----- OCIE0: timer/counter0 output compare match interrupt enable
+ *   | | | | | +------- TOIE1: timer/counter1 overflow interrupt enable
+ *   | | | | +--------- OCIE1B: timer/counter1 output compare match B interrupt enable
+ *   | | | +----------- OCIE1A: timer/counter1 output compare match A interrupt enable
+ *   | | +------------- TICIE1: timer/counter1 input capture interrupt enable
+ *   | +--------------- TOIE2: timer/counter2 overflow interrupt enable
+ *   +----------------- OCIE2: timer/counter2 output compare match interrupt enable
+ * 
  *   TCNT1=TCNT1H+TCNT1L: timer/counter1 register
  *   ICR1=ICR1H+ICR1L: timer/counter1 input capture register
  *   OCR1B=OCR1BH+OCR1BL: timer/counter1 output compare B register
@@ -70,7 +70,7 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
+ * 
  *   timer1_set(TIMER1_CK_DIV1 | TIMER1_MODE_CTC_CMPA);
  *   timer1_value(0);
  *   timer1_compareA(1000);
@@ -78,11 +78,11 @@
  *   timer1_capture(0);
  *   timer1_signal(TIMER1_INT_CMPA);
  *   sei();
- *   
+ * 
  *   for (;;) {
  *     PORTB = i;
  *   }
- *   
+ * 
  *   return 0;
  * }
  * 
@@ -132,14 +132,14 @@
 #define TIMER1_MODE_FAST_PWM_CMPA                (((b1(WGM11)|b1(WGM10))<<8)|b1(WGM13)|b1(WGM12))  /* fast PWM generator - top: OCR1A */
 
 /* timer/counter1 OC1A and OC1B output status (timer1_set) */
-#define TIMER1_OC1A_DISCONNECT  ((b0(COM1A1)|b0(COM1A0))<<8)  /* OC1A output disconnected */
-#define TIMER1_OC1A_TOGGLE      ((b0(COM1A1)|b1(COM1A0))<<8)  /* OC1A output toggle on compare */
-#define TIMER1_OC1A_CLEAR       ((b1(COM1A1)|b0(COM1A0))<<8)  /* OC1A output clear on compare */
-#define TIMER1_OC1A_SET         ((b1(COM1A1)|b1(COM1A0))<<8)  /* OC1A output set on compare */
-#define TIMER1_OC1B_DISCONNECT  ((b0(COM1B1)|b0(COM1B0))<<8)  /* OC1B output disconnected */
-#define TIMER1_OC1B_TOGGLE      ((b0(COM1B1)|b1(COM1B0))<<8)  /* OC1B output toggle on compare */
-#define TIMER1_OC1B_CLEAR       ((b1(COM1B1)|b0(COM1B0))<<8)  /* OC1B output clear on compare */
-#define TIMER1_OC1B_SET         ((b1(COM1B1)|b1(COM1B0))<<8)  /* OC1B output set on compare */
+#define TIMER1_OC1A_NC      ((b0(COM1A1)|b0(COM1A0))<<8)  /* OC1A output disconnected */
+#define TIMER1_OC1A_TOGGLE  ((b0(COM1A1)|b1(COM1A0))<<8)  /* OC1A output toggle on compare */
+#define TIMER1_OC1A_CLEAR   ((b1(COM1A1)|b0(COM1A0))<<8)  /* OC1A output clear on compare */
+#define TIMER1_OC1A_SET     ((b1(COM1A1)|b1(COM1A0))<<8)  /* OC1A output set on compare */
+#define TIMER1_OC1B_NC      ((b0(COM1B1)|b0(COM1B0))<<8)  /* OC1B output disconnected */
+#define TIMER1_OC1B_TOGGLE  ((b0(COM1B1)|b1(COM1B0))<<8)  /* OC1B output toggle on compare */
+#define TIMER1_OC1B_CLEAR   ((b1(COM1B1)|b0(COM1B0))<<8)  /* OC1B output clear on compare */
+#define TIMER1_OC1B_SET     ((b1(COM1B1)|b1(COM1B0))<<8)  /* OC1B output set on compare */
 
 /* timer/counter1 input capture options (timer1_set) */
 #define TIMER1_CAPTURE_NOISE_CANCELER  b1(ICNC1)  /* timer/counter1 input capture noise canceler */

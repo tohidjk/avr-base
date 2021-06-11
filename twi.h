@@ -7,35 +7,35 @@
 
 /**
  * Registers:
- *   
- *          TWSR: TWI status register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   \----+----/   \+/
- *        |         +---- TWPS1,0: TWI prescaler
- *        +-------------- TWS7,6,5,4,3: TWI status
- *   
- *          TWAR: TWI slave address register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   \------+------/ ^
- *          |        +--- TWGCE: TWI general call recognition enable
- *          +------------ TWA6,5,4,3,2,1,0: TWI slave address
- *   
- *          TWCR: TWI control register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^   ^
- *   | | | |   | |   +--- TWIE: TWI interrupt enable
- *   | | | |   | +------- TWEN: TWI enable
- *   | | | |   +--------- TWWC: TWI write collition flag
- *   | | | +------------- TWSTO: TWI stop condition
- *   | | +--------------- TWSTA: TWI start condition
- *   | +----------------- TWEA: TWI acknowledge enable
- *   +------------------- TWINT: TWI interrupt flag
- *   
- *   TWBR: TWI bit rate register
- *   TWDR: TWI data register
+ * 
+ *        TWSR: TWI status register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   \---+---/   \+/
+ *       |        +---- TWPS1,0: prescaler
+ *       +------------- TWS7,6,5,4,3: status
+ * 
+ *        TWAR: TWI slave address register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   \-----+-----/ ^
+ *         |       +--- TWGCE: general call recognition enable
+ *         +----------- TWA6,5,4,3,2,1,0: slave address
+ * 
+ *        TWCR: TWI control register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^   ^
+ *   | | | | | |   +--- TWIE: interrupt enable
+ *   | | | | | +------- TWEN: enable
+ *   | | | | +--------- TWWC: write collition flag
+ *   | | | +----------- TWSTO: stop condition
+ *   | | +------------- TWSTA: start condition
+ *   | +--------------- TWEA: acknowledge enable
+ *   +----------------- TWINT: interrupt flag
+ * 
+ *   TWBR: bitrate register
+ *   TWDR: data register
  */
 
 /*
@@ -45,18 +45,18 @@
  * 
  * int main(void) {
  *   unsigned char i = 0;
- *   
- *   twi_set(TWI_ACKNOWLEDGE_ON | TWI_STOP_CONDITION);
+ * 
+ *   twi_set(TWI_ACKNOWLEDGE | TWI_STOP_CONDITION);
  *   twi_bitrate(100);
  *   twi_addr(TWI_ADDR_GENERAL);
  *   twi_signal(TWI_INT);
  *   twi_en();
- *   
+ * 
  *   for (;;) {
  *     twi_wait();
  *     twi_data(i++);
  *   }
- *   
+ * 
  *   return 0;
  * }
  * 
@@ -82,7 +82,7 @@
 #define TWI_CK_DIV64  (b1(TWPS1)|b1(TWPS0))  /* bitrate/64 */
 
 /* two wire interface options (twi_set) */
-#define TWI_ACKNOWLEDGE_ON   (b1(TWEA)<<8)   /* TWI enable acknowledge pulse */
+#define TWI_ACKNOWLEDGE      (b1(TWEA)<<8)   /* TWI enable acknowledge pulse */
 #define TWI_START_CONDITION  (b1(TWSTA)<<8)  /* TWI start condition bit (master) */
 #define TWI_STOP_CONDITION   (b1(TWSTO)<<8)  /* TWI stop condition bit (master) */
 

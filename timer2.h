@@ -2,57 +2,57 @@
  * Timer/counter2
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *          ASSR: asynchronous status register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *             ^ ^ ^ ^
- *             | | | +--- TCR2UB: timer/counter2 control register update busy
- *             | | +----- OCR2UB: timer/counter2 output compare register update busy
- *             | +------- TCN2UB : timer/counter2 update busy
- *             +--------- AS2: Timer/counter2 asynchronous clock select
- *   
- *         TCCR2: timer/counter2 control register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ \+/   ^ \-+-/
- *   | |  |    |   +----- CS22,1,0: clock select
- *   | |  |    +--------- WGM21: waveform generation mode
- *   | |  +-------------- COM21,0: compare output mode
- *   | +----------------- WGM20: waveform generation mode
- *   +------------------- FOC2: force output compare
- *   
- *          TIFR: timer/counter interrupt flag register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ ^ ^
- *   | | | |   | | | +--- TOV0: timer/counter0 overflow flag
- *   | | | |   | | +----- OCF0: timer/counter0 output compare match flag
- *   | | | |   | +------- TOV1: timer/counter1 overflow flag
- *   | | | |   +--------- OCF1B: timer/counter1 output compare match B flag
- *   | | | +------------- OCF1A: timer/counter1 output compare match A flag
- *   | | +--------------- ICF1: timer/counter1 input capture flag
- *   | +----------------- TOV2: timer/counter2 overflow flag
- *   +------------------- OCF2: timer/counter2 output compare match flag
- *   
- *         TIMSK: timer/counter interrupt mask register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ ^ ^
- *   | | | |   | | | +--- TOIE0: timer/counter0 overflow interrupt enable
- *   | | | |   | | +----- OCIE0: timer/counter0 output compare match interrupt enable
- *   | | | |   | +------- TOIE1: timer/counter1 overflow interrupt enable
- *   | | | |   +--------- OCIE1B: timer/counter1 output compare match B interrupt enable
- *   | | | +------------- OCIE1A: timer/counter1 output compare match A interrupt enable
- *   | | +--------------- TICIE1: timer/counter1 input capture interrupt enable
- *   | +----------------- TOIE2: timer/counter2 overflow interrupt enable
- *   +------------------- OCIE2: timer/counter2 output compare match interrupt enable
- *   
+ * 
+ *        ASSR: asynchronous status register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *           ^ ^ ^ ^
+ *           | | | +--- TCR2UB: timer/counter2 control register update busy
+ *           | | +----- OCR2UB: timer/counter2 output compare register update busy
+ *           | +------- TCN2UB : timer/counter2 update busy
+ *           +--------- AS2: timer/counter2 asynchronous clock select
+ * 
+ *        TCCR2: timer/counter2 control register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ \+/ ^ \-+-/
+ *   | |  |  |   +----- CS22,1,0: clock select
+ *   | |  |  +--------- WGM21: waveform generation mode
+ *   | |  +------------ COM21,0: compare output mode
+ *   | +--------------- WGM20: waveform generation mode
+ *   +----------------- FOC2: force output compare
+ * 
+ *        TIFR: timer/counter interrupt flag register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ ^ ^
+ *   | | | | | | | +--- TOV0: timer/counter0 overflow flag
+ *   | | | | | | +----- OCF0: timer/counter0 output compare match flag
+ *   | | | | | +------- TOV1: timer/counter1 overflow flag
+ *   | | | | +--------- OCF1B: timer/counter1 output compare match B flag
+ *   | | | +----------- OCF1A: timer/counter1 output compare match A flag
+ *   | | +------------- ICF1: timer/counter1 input capture flag
+ *   | +--------------- TOV2: timer/counter2 overflow flag
+ *   +----------------- OCF2: timer/counter2 output compare match flag
+ * 
+ *        TIMSK: timer/counter interrupt mask register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ ^ ^
+ *   | | | | | | | +--- TOIE0: timer/counter0 overflow interrupt enable
+ *   | | | | | | +----- OCIE0: timer/counter0 output compare match interrupt enable
+ *   | | | | | +------- TOIE1: timer/counter1 overflow interrupt enable
+ *   | | | | +--------- OCIE1B: timer/counter1 output compare match B interrupt enable
+ *   | | | +----------- OCIE1A: timer/counter1 output compare match A interrupt enable
+ *   | | +------------- TICIE1: timer/counter1 input capture interrupt enable
+ *   | +--------------- TOIE2: timer/counter2 overflow interrupt enable
+ *   +----------------- OCIE2: timer/counter2 output compare match interrupt enable
+ * 
  *   TCNT2: timer/counter2 register
  *   OCR2: timer/counter2 output compare match register
  */
@@ -68,18 +68,18 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
+ * 
  *   timer2_rtc_mode_en();
  *   timer2_set(TIMER2_CK_DIV128);
  *   timer2_value(0);
  *   timer2_compare(0);
  *   timer2_signal(TIMER2_INT_OVF);
  *   sei();
- *   
+ * 
  *   for (;;) {
  *     PORTB = i;
  *   }
- *   
+ * 
  *   return 0;
  * }
  * 
@@ -118,10 +118,10 @@
 #define TIMER2_MODE_FAST_PWM           (b1(WGM20)|b1(WGM21))  /* fast PWM generator - top: 0xFF */
 
 /* timer/counter2 OC2 output status (timer2_set) */
-#define TIMER2_OC2_DISCONNECT  (b0(COM21)|b0(COM20))  /* OC2 output disconnected */
-#define TIMER2_OC2_TOGGLE      (b0(COM21)|b1(COM20))  /* OC2 output toggle on compare */
-#define TIMER2_OC2_CLEAR       (b1(COM21)|b0(COM20))  /* OC2 output clear on compare */
-#define TIMER2_OC2_SET         (b1(COM21)|b1(COM20))  /* OC2 output set on compare */
+#define TIMER2_OC2_NC      (b0(COM21)|b0(COM20))  /* OC2 output disconnected */
+#define TIMER2_OC2_TOGGLE  (b0(COM21)|b1(COM20))  /* OC2 output toggle on compare */
+#define TIMER2_OC2_CLEAR   (b1(COM21)|b0(COM20))  /* OC2 output clear on compare */
+#define TIMER2_OC2_SET     (b1(COM21)|b1(COM20))  /* OC2 output set on compare */
 
 /* timer/counter2 interrupts (timer2_signal) */
 #define TIMER2_INT_CMP  b1(OCIE2)  /* timer/counter2 compare match */

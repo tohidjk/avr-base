@@ -2,23 +2,23 @@
  * Eeprom memory
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *          EECR: eeprom control register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *             ^ ^ ^ ^
- *             | | | +--- EERE: eeprom read enable
- *             | | +----- EEWE: eeprom write enable
- *             | +------- EEMWE: eeprom master write enable
- *             +--------- EERIE: eeprom ready interrupt enable
- *   
- *   EEAR=EEARL+EEARH: eeprom address register
- *   EEDR: eeprom data register
+ * 
+ *        EECR: eeprom control register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *           ^ ^ ^ ^
+ *           | | | +--- EERE: read enable
+ *           | | +----- EEWE: write enable
+ *           | +------- EEMWE: master write enable
+ *           +--------- EERIE: ready interrupt enable
+ * 
+ *   EEAR=EEARL+EEARH: address register
+ *   EEDR: data register
  */
 
 /*
@@ -33,13 +33,13 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
+ * 
  *   for (;;) {
  *     PORTB = eep_read_byte(&i);
  *     eep_write_byte(&i, PORTB+1);
  *     _delay_ms(500);
  *   }
- *   
+ * 
  *   return 0;
  * }
  */

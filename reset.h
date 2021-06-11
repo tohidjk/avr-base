@@ -2,23 +2,23 @@
  * Reset sources
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *         MCUCSR: MCU control and status register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^   ^   ^ ^ ^ ^
- *   | |   |   | | | +--- PORF: power-on reset flag
- *   | |   |   | | +----- EXTRF: external reset flag
- *   | |   |   | +------- BORF: brown-out reset flag
- *   | |   |   +--------- WDRF: watchdog reset flag
- *   | |   +------------- JTRF: JTAG reset flag
- *   | +----------------- ISC2: external interrupt 2 sense control
- *   +------------------- JTD: JTAG interface disable
+ * 
+ *       MCUCSR: MCU control and status register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^   ^ ^ ^ ^ ^
+ *   | |   | | | | +--- PORF: power-on reset flag
+ *   | |   | | | +----- EXTRF: external reset flag
+ *   | |   | | +------- BORF: brown-out reset flag
+ *   | |   | +--------- WDRF: watchdog reset flag
+ *   | |   +----------- JTRF: JTAG reset flag
+ *   | +--------------- ISC2: external interrupt 2 sense control
+ *   +----------------- JTD: JTAG interface disable
  */
 
 /*
@@ -30,17 +30,17 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
+ * 
  * #if !RST_WDRF
  *   #warning "RST_WDRF"
  * #endif
- *   
+ * 
  *   if (reset_check() == RST_WDRF)
  *     PORTB = 1;
  *   reset_clear();
- *   
+ * 
  *   for (;;);
- *   
+ * 
  *   return 0;
  * }
  */

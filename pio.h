@@ -1,16 +1,16 @@
 /*
- * Parallel io ports
+ * Parallel input/ouput ports
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *   PORTx: port x data register
+ * 
+ *   PORTx: port x output data register
  *   DDRx: port x data direction register
- *   PINx: port x input pins
+ *   PINx: port x input data pins
  */
 
 /*
@@ -27,7 +27,7 @@
  *   DDR(B, 5, OUTPUT);
  *   DDR(B, 6, OUTPUT);
  *   DDR(B, 7, OUTPUT);
- *   
+ * 
  *   PORT(B, 0, PULLDOWN);
  *   PORT(B, 1, PULLDOWN);
  *   PORT(B, 2, PULLUP);
@@ -36,14 +36,14 @@
  *   PORT(B, 5, LOW);
  *   PORT(B, 6, HIGH);
  *   PORT(B, 7, HIGH);
- *   
+ * 
  *   for (;;) {
  *     if (PIN(B, 0)) PORT(B, 4, INVERT);
  *     if (PIN(B, 1)) PORT(B, 5, INVERT);
  *     if (!PIN(B, 2)) PORT(B, 6, INVERT);
  *     if (!PIN(B, 3)) PORT(B, 7, INVERT);
  *   }
- *   
+ * 
  *   return 0;
  * }
  */

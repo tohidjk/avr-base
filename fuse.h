@@ -2,32 +2,32 @@
  * Fuses bits
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Fuses:
- *   
- *         LFUSE: low fuse byte
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ \+/   \--+--/
- *   | |  |       +------ CKSEL3,2,1,0: select clock source
- *   | |  +-------------- SUT1,0: select start-up time
- *   | +----------------- BODEN: brown-out detector enable
- *   +------------------- BODLEVEL: brown-out detector trigger level - if select this, brown-out reset on 4v, else on 2.7v
- *   
- *         HFUSE: high fuse byte
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ \+/ ^
- *   | | | |   |  |  +--- BOOTRST: select reset vector - if select this, reset vector on boot size pointer, else on 0x0000
- *   | | | |   |  +------ BOOTSZ1,0: select boot size
- *   | | | |   +--------- EESAVE: eeprom memory is preserved through the chip erase
- *   | | | +------------- CKOPT: oscillator options - nois reduction if external clock source selected
- *   | | +--------------- SPIEN: SPI serial program and data downloading enable
- *   | +----------------- m32,m16=JTAGEN: JTAG interface enable - m8=WDTON: watchdig timer always ON
- *   +------------------- m32,m16=OCDEN: on chip debug enable - m8=RSTDISBL: external reset disable
+ * 
+ *        LFUSE: low fuse byte
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ \+/ \--+--/
+ *   | |  |     +------ CKSEL3,2,1,0: select clock source
+ *   | |  +------------ SUT1,0: select start-up time
+ *   | +--------------- BODEN: brown-out detector enable
+ *   +----------------- BODLEVEL: brown-out detector trigger level - if select this, brown-out reset on 4v, else on 2.7v
+ * 
+ *        HFUSE: high fuse byte
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ \+/ ^
+ *   | | | | |  |  +--- BOOTRST: select reset vector - if select this, reset vector on boot size pointer, else on 0x0000
+ *   | | | | |  +------ BOOTSZ1,0: select boot size
+ *   | | | | +--------- EESAVE: eeprom memory is preserved through the chip erase
+ *   | | | +----------- CKOPT: oscillator options - nois reduction if external clock source selected
+ *   | | +------------- SPIEN: SPI serial program and data downloading enable
+ *   | +--------------- m32,m16=JTAGEN: JTAG interface enable - m8=WDTON: watchdig timer always ON
+ *   +----------------- m32,m16=OCDEN: on chip debug enable - m8=RSTDISBL: external reset disable
  */
 
 /*

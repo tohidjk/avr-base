@@ -2,51 +2,51 @@
  * Universal synchronous and asynchronous serial receiver and transmitter
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *         UCSRB: USART control and status register B
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ ^ ^
- *   | | | |   | | | +--- TXB8: transmitt data bit 8
- *   | | | |   | | +----- RXB8: receive data bit 8
- *   | | | |   | +------- UCSZ2: character size
- *   | | | |   +--------- TXEN: transmitter enable
- *   | | | +------------- RXEN: receiver enable
- *   | | +--------------- UDRIE: USART data register empty interrupt enable
- *   | +----------------- TXCIE: transmitt complete interrupt enable
- *   +------------------- RXCIE: receive complete interrupt enable
- *   
- *         UCSRA: USART control and status register A
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ ^ ^
- *   | | | |   | | | +--- MPCM: multi-processor communication mode
- *   | | | |   | | +----- U2X: double the USART transmission speed
- *   | | | |   | +------- PE: parity error
- *   | | | |   +--------- DOR: data over-run
- *   | | | +------------- FE: framing error
- *   | | +--------------- UDRE: USART data register empty
- *   | +----------------- TXC: USART transmitt complete
- *   +------------------- RXC: USART receive complete
- *   
- *         UCSRC: USART control and status register C
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ \+/   ^ \+/ ^
- *   | |  |    |  |  +--- UCPOL: clock polarity
- *   | |  |    |  +------ UCSZ1,0: character size
- *   | |  |    +--------- USBS: stop bit select
- *   | |  +-------------- UPM1,0: parity mode
- *   | +----------------- UMSEL: USART mode select
- *   +------------------- URSEL: register select
- *   
- *   UBRRL+UBRRH: USART baud rate registers
- *   UDR: USART data register
+ * 
+ *        UCSRB: USART control and status register B
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ ^ ^
+ *   | | | | | | | +--- TXB8: transmitt data bit 8
+ *   | | | | | | +----- RXB8: receive data bit 8
+ *   | | | | | +------- UCSZ2: character size
+ *   | | | | +--------- TXEN: transmitter enable
+ *   | | | +----------- RXEN: receiver enable
+ *   | | +------------- UDRIE: data register empty interrupt enable
+ *   | +--------------- TXCIE: transmitt complete interrupt enable
+ *   +----------------- RXCIE: receive complete interrupt enable
+ * 
+ *        UCSRA: USART control and status register A
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ ^ ^
+ *   | | | | | | | +--- MPCM: multi-processor communication mode
+ *   | | | | | | +----- U2X: double the transmission speed
+ *   | | | | | +------- PE: parity error
+ *   | | | | +--------- DOR: data over-run
+ *   | | | +----------- FE: framing error
+ *   | | +------------- UDRE: data register empty
+ *   | +--------------- TXC: transmitt complete
+ *   +----------------- RXC: receive complete
+ * 
+ *        UCSRC: USART control and status register C
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ \+/ ^ \+/ ^
+ *   | |  |  |  |  +--- UCPOL: clock polarity
+ *   | |  |  |  +------ UCSZ1,0: character size
+ *   | |  |  +--------- USBS: stop bit select
+ *   | |  +------------ UPM1,0: parity mode
+ *   | +--------------- UMSEL: mode select
+ *   +----------------- URSEL: register select
+ * 
+ *   UBRR=UBRRL+UBRRH: baud rate registers
+ *   UDR: data register
  */
 
 /*
@@ -57,20 +57,20 @@
  * 
  * int main(void) {
  *   unsigned char i = 0;
- *   
+ * 
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
- *   usart_set(USART_RX | USART_TX | USART_REGISTER_SELECT | USART_DATA_8BIT);
+ * 
+ *   usart_set(USART_RX | USART_TX | USART_REG_SELECT | USART_DATA_8BIT);
  *   usart_baud(9600);
  *   usart_signal(USART_INT_RXC);
  *   sei();
- *   
+ * 
  *   for (;;) {
  *     usart_empty_wait();
  *     usart_tx_data(i++);
  *   }
- *   
+ * 
  *   return 0;
  * }
  * 
@@ -93,13 +93,13 @@
 
 
 /* USART options (usart_set) */
-#define USART_BAUD_RATE_DOUBLE  (b1(U2X)<<8)     /* double the USART transmission speed (Asynchronous) */
-#define USART_MULTI_PROCESSOR   (b1(MPCM)<<8)    /* multi-processor communication mode */
-#define USART_RX                b1(RXEN)         /* receiver enable */
-#define USART_TX                b1(TXEN)         /* transmitter enable */
-#define USART_SYNCHRONOUS       (b1(UMSEL)<<16)  /* USART synchronous mode select */
-#define USART_CLOCK_POLARITY    (b1(UCPOL)<<16)  /* clock polarity (synchronous) */
-#define USART_REGISTER_SELECT   (b1(URSEL)<<16)  /* register select for use UCSRC */
+#define USART_BAUD_DOUBLE  (b1(U2X)<<8)     /* double the USART transmission speed (Asynchronous) */
+#define USART_MULTI_PROC   (b1(MPCM)<<8)    /* multi-processor communication mode */
+#define USART_RX           b1(RXEN)         /* receiver enable */
+#define USART_TX           b1(TXEN)         /* transmitter enable */
+#define USART_SYNC         (b1(UMSEL)<<16)  /* USART synchronous mode select */
+#define USART_CK_POLARITY  (b1(UCPOL)<<16)  /* clock polarity (synchronous) */
+#define USART_REG_SELECT   (b1(URSEL)<<16)  /* register select for use UCSRC */
 
 /* USART parity modes (usart_set) */
 #define USART_PARITY_NONE  ((b0(UPM1)|b0(UPM0))<<16)  /* none parity */
@@ -132,20 +132,20 @@
 
 
 /* USART macro routines */
-#define usart_set(cnt)         {out(UCSRB, cnt); out(UCSRA, (cnt)>>8); out(UCSRC, (cnt)>>16);}  /* set USART */
-#define usart_baud(bdr)        out(UBRR, (F_CPU+(bdr)*8)/((bdr)*16)-1)  /* for Asynchronous and synchronous (master) */
-/*#define usart_setbaud()        out(UBRR, UBRR_VALUE)*/  /* <util/setbaud.h> for Asynchronous and synchronous (master) */
-#define usart_signal(sgn)      smi(UCSRB, sgn)                /* USART enable signals */
-#define usart_tx_data(dta)     {out(UDR, dta); bis(dta, 0x100)? sbi(UCSRB, TXB8): cbi(UCSRB, TXB8);}  /* send data */
-#define usart_rx_data()        (in(UDR)|(bis(UCSRB, RXB8)? 0x100: 0))  /* read received data */
-#define usart_frame_error()    bis(UCSRA, FE)                 /* check USART receive framing error */
-#define usart_data_over_run()  bis(UCSRA, DOR)                /* check USART receive data over run */
-#define usart_parity_error()   bis(UCSRA, PE)                 /* check USART receive parity error */
-#define usart_error()          mis(UCSRA, b1(FE)|b1(DOR)|b1(PE))  /* check USART receive framing error and data over run and parity error */
-#define usart_empty_wait()     wait_set_bit(UCSRA, UDRE)      /* wait to USART data register empty */
-#define usart_rxc_wait()       wait_set_bit(UCSRA, RXC)       /* wait to USART receive complete */
-#define usart_txc_wait()       wait_set_bit(UCSRA, TXC)       /* wait to USART transmitt complete */
-#define usart_di()             cmi(UCSRB, b1(TXEN)|b1(RXEN))  /* USART disable */
+#define usart_set(cnt)        {out(UCSRB, cnt); out(UCSRA, (cnt)>>8); out(UCSRC, (cnt)>>16);}  /* set USART */
+#define usart_baud(bdr)       out(UBRR, (F_CPU+(bdr)*8)/((bdr)*16)-1)  /* for Asynchronous and synchronous (master) */
+/*#define usart_setbaud()       out(UBRR, UBRR_VALUE)*/  /* <util/setbaud.h> for Asynchronous and synchronous (master) */
+#define usart_signal(sgn)     smi(UCSRB, sgn)                /* USART enable signals */
+#define usart_tx_data(dta)    {out(UDR, dta); bis(dta, 0x100)? sbi(UCSRB, TXB8): cbi(UCSRB, TXB8);}  /* send data */
+#define usart_rx_data()       (in(UDR)|(bis(UCSRB, RXB8)? 0x100: 0))  /* read received data */
+#define usart_frame_error()   bis(UCSRA, FE)                 /* check USART receive framing error */
+#define usart_data_overrun()  bis(UCSRA, DOR)                /* check USART receive data over run */
+#define usart_parity_error()  bis(UCSRA, PE)                 /* check USART receive parity error */
+#define usart_error()         mis(UCSRA, b1(FE)|b1(DOR)|b1(PE))  /* check USART receive framing error and data over run and parity error */
+#define usart_empty_wait()    wait_set_bit(UCSRA, UDRE)      /* wait to USART data register empty */
+#define usart_rx_wait()       wait_set_bit(UCSRA, RXC)       /* wait to USART receive complete */
+#define usart_tx_wait()       wait_set_bit(UCSRA, TXC)       /* wait to USART transmitt complete */
+#define usart_di()            cmi(UCSRB, b1(TXEN)|b1(RXEN))  /* USART disable */
 
 
 /* USART receive complete interrupt service routine */

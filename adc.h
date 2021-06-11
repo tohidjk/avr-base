@@ -2,43 +2,43 @@
  * Analog to digital converter
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *         ADCSRA: ADC control and status register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ \-+-/
- *   | | | |   |   +----- ADPS2,1,0: ADC prescaler select
- *   | | | |   +--------- ADIE: ADC interrupt enable
- *   | | | +------------- ADIF: ADC interrupt flag
- *   | | +--------------- m32,m16=ADATE: ADC auto trigger enable - m8=ADFR: ADC free runing
- *   | +----------------- ADSC: ADC start conversion
- *   +------------------- ADEN: ADC enable
- *   
- *         ADMUX: ADC multiplexer selection register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   \+/ ^ \----+----/
- *    |  |      +-------- MUX4,3,2,1,0: analog channel and gain selection
- *    |  +--------------- ADLAR: left adjust result
- *    +------------------ REFS1,0: reference selection
- *   
- *         SFIOR: special function IO register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   \-+-/ ^   ^ ^ ^ ^
- *     |   |   | | | +--- PSR10: prescaler reset timer/counter1&0
- *     |   |   | | +----- PSR2: prescaler Reset timer/counter2
- *     |   |   | +------- PUD: pull-up disable
- *     |   |   +--------- ACME: analog comparator multiplexer enable
- *     |   +------------- m8=ADHSM: ADC high speed mode
- *     +----------------- ADTS2,1,0: ADC auto trigger source
- *   
- *   ADCW=ADCH+ADCL: ADC data registers
+ * 
+ *       ADCSRA: ADC control and status register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ \-+-/
+ *   | | | | |   +----- ADPS2,1,0: prescaler select
+ *   | | | | +--------- ADIE: interrupt enable
+ *   | | | +----------- ADIF: interrupt flag
+ *   | | +------------- m32,m16=ADATE: auto trigger enable - m8=ADFR: free runing
+ *   | +--------------- ADSC: start conversion
+ *   +----------------- ADEN: enable
+ * 
+ *        ADMUX: ADC multiplexer selection register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   \+/ ^ \---+---/
+ *    |  |     +------- MUX4,3,2,1,0: analog channel and gain selection
+ *    |  +------------- ADLAR: left adjust result
+ *    +---------------- REFS1,0: reference selection
+ * 
+ *        SFIOR: special function IO register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   \-+-/ ^ ^ ^ ^ ^
+ *     |   | | | | +--- PSR10: prescaler reset timer/counter1&0
+ *     |   | | | +----- PSR2: prescaler Reset timer/counter2
+ *     |   | | +------- PUD: pull-up disable
+ *     |   | +--------- ACME: analog comparator multiplexer enable
+ *     |   +----------- m8=ADHSM: ADC high speed mode
+ *     +--------------- ADTS2,1,0: ADC auto trigger source
+ * 
+ *   ADCW=ADCH+ADCL: data registers
  */
 
 /*
@@ -50,18 +50,18 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
- *   adc_set(ADC_CK_DIV64 | ADC_VREF_AREF | ADC_AUTO_TRIGGER_ON | ADC_FREE_RUN | ADC_START_CONVERTION);
+ * 
+ *   adc_set(ADC_CK_DIV64 | ADC_VREF_AREF | ADC_AUTO_TRIGGER | ADC_FREE_RUN | ADC_START);
  *   adc_signal(ADC_INT_COMPLETE);
  *   adc_input(ADC0);
  *   adc_en();
  *   sei();
- *   
+ * 
  *   for (;;) {
  *     adc_wait();
  *     PORTB = (adc_data() >> 2);
  *   }
- *   
+ * 
  *   return 0;
  * }
  * 
@@ -97,9 +97,9 @@
 /* analog to digital converter options (adc_set) */
 #define ADC_DATA_RIGHT_ADJUST  (b0(ADLAR)<<8)  /* data result right adjust */
 #define ADC_DATA_LEFT_ADJUST   (b1(ADLAR)<<8)  /* data result left adjust */
-#define ADC_START_CONVERTION   b1(ADSC)        /* start convertion */
+#define ADC_START              b1(ADSC)        /* start convertion */
 #ifdef ADATE
-#define ADC_AUTO_TRIGGER_ON    b1(ADATE)       /* auto trigger enable */
+#define ADC_AUTO_TRIGGER       b1(ADATE)       /* auto trigger enable */
 #endif /* ADATE */
 
 /* analog to digital converter auto trigger modes (adc_set) */

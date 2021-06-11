@@ -2,19 +2,19 @@
  * Watchdog timer
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *         WDTCR: watchdog timer control register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *         ^   ^ \-+-/
- *         |   |   +----- WDP2,1,0: watchdog timer prescaler
- *         |   +--------- WDE: watchdog timer enable
- *         +------------- WDTOE: watchdog timer turn-off enable
+ * 
+ *        WDTCR: watchdog timer control register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *         ^ ^ \-+-/
+ *         | |   +----- WDP2,1,0: prescaler
+ *         | +--------- WDE: enable
+ *         +----------- WDTOE: turn-off enable
  */
 
 /*
@@ -27,18 +27,18 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
+ * 
  *   wdt_set(WDT_CK_2S);
  *   wdt_en();
- *   
+ * 
  *   for (PORTB = 1; PORTB; PORTB <<= 1) {
  *     wdr();
  *     _delay_ms(500);
  *   }
- *   
+ * 
  *   PORTB = ~0;
  *   for (;;);
- *   
+ * 
  *   return 0;
  * }
  */

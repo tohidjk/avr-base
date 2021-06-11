@@ -2,33 +2,33 @@
  * Serial peripheral interface
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *          SPCR: SPI control register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^ ^ ^   ^ ^ \+/
- *   | | | |   | |  +---- SPR1,0: SPI clock rate
- *   | | | |   | +------- CPHA: clock Phase
- *   | | | |   +--------- CPOL: clock polarity
- *   | | | +------------- MSTR: master/slave select
- *   | | +--------------- DORD: data order
- *   | +----------------- SPE: SPI enable
- *   +------------------- SPIE: SPI interrupt enable
- *   
- *          SPSR: SPI status register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ ^             ^
- *   | |             +--- SPI2X: double SPI speed
- *   | +----------------- WCOL: write collision flag
- *   +------------------- SPIF: SPI interrupt flag
- *   
- *   SPDR: SPI data register
+ * 
+ *        SPCR: SPI control register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^ ^ ^ ^ ^ \+/
+ *   | | | | | |  +---- SPR1,0: clock rate
+ *   | | | | | +------- CPHA: clock Phase
+ *   | | | | +--------- CPOL: clock polarity
+ *   | | | +----------- MSTR: master/slave select
+ *   | | +------------- DORD: data order
+ *   | +--------------- SPE: enable
+ *   +----------------- SPIE: interrupt enable
+ * 
+ *        SPSR: SPI status register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ ^           ^
+ *   | |           +--- SPI2X: double speed
+ *   | +--------------- WCOL: write collision flag
+ *   +----------------- SPIF: interrupt flag
+ * 
+ *   SPDR: data register
  */
 
 /*
@@ -38,17 +38,17 @@
  * 
  * int main(void) {
  *   unsigned char i = 0;
- *   
+ * 
  *   spi_set(SPI_MASTER | SPI_CK_DIV64);
  *   spi_signal(SPI_INT_STC);
  *   spi_en();
  *   sei();
- *   
+ * 
  *   for (;;) {
  *     spi_wait();
  *     spi_data(i++);
  *   }
- *   
+ * 
  *   return 0;
  * }
  * 
@@ -77,11 +77,11 @@
 #define SPI_CK_DIV128  ((b0(SPI2X)<<8)|b1(SPR1)|b1(SPR0))  /* F_CPU/128 */
 
 /* SPI options (spi_set) */
-#define SPI_DATA_ORDER      b1(DORD)  /* data order */
-#define SPI_SLAVE           b0(MSTR)  /* slave select */
-#define SPI_MASTER          b1(MSTR)  /* master select */
-#define SPI_CLOCK_POLARITY  b1(CPOL)  /* clock polarity */
-#define SPI_CLOCK_PHASE     b1(CPHA)  /* clock phase */
+#define SPI_DATA_ORDER   b1(DORD)  /* data order */
+#define SPI_SLAVE        b0(MSTR)  /* slave select */
+#define SPI_MASTER       b1(MSTR)  /* master select */
+#define SPI_CK_POLARITY  b1(CPOL)  /* clock polarity */
+#define SPI_CK_PHASE     b1(CPHA)  /* clock phase */
 
 /* SPI interrupts (spi_signal) */
 #define SPI_INT_STC  b1(SPIE)  /* SPI serial transfer complete */

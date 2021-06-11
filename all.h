@@ -2,7 +2,7 @@
  * All header files
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 
@@ -10,25 +10,25 @@
 #define _ALL_H_ 1
 
 
-#include "util.h"    /* utils */
+#include "util.h"
 
-#include "acmp.h"    /* analog comparator */
-#include "adc.h"     /* analog to digital converter */
-#include "eep.h"     /* internal eeprom memory */
-#include "fuse.h"    /* fuses bits */
-#include "irq.h"     /* external interrupt requestes */
-#include "other.h"   /* other controls and statuss */
-#include "pio.h"     /* parallel io ports */
-#include "reset.h"   /* reset sources */
-#include "sleep.h"   /* sleep mode */
-#include "spi.h"     /* serial peripheral interface */
-#include "spm.h"     /* store program memory (boot loader) */
-#include "timer0.h"  /* timer/counter0 */
-#include "timer1.h"  /* timer/counter1 */
-#include "timer2.h"  /* timer/counter2 */
-#include "twi.h"     /* two wire serial interface */
-#include "usart.h"   /* universal synchronous and asynchronous serial receiver and transmitter */
-#include "wdt.h"     /* watchdog timer */
+#include "acmp.h"
+#include "adc.h"
+#include "eep.h"
+#include "fuse.h"
+#include "irq.h"
+#include "other.h"
+#include "pio.h"
+#include "reset.h"
+#include "sleep.h"
+#include "spi.h"
+#include "spm.h"
+#include "timer0.h"
+#include "timer1.h"
+#include "timer2.h"
+#include "twi.h"
+#include "usart.h"
+#include "wdt.h"
 
 
 #endif /* _ALL_H_ */

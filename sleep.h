@@ -2,20 +2,20 @@
  * Sleep mode
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-11 BETA
  */
 
 /**
  * Registers:
- *   
- *         MCUCR: MCU control register
- *   /-------+-------\
- *   7 6 5 4   3 2 1 0
- *   ^ \-+-/   \+/ \+/
- *   |   |      |   +---- ISC01,0: external interrupt 0 sense control
- *   |   |      +-------- ISC11,0: external interrupt 1 sense control
- *   |   +--------------- SM2,1,0: sleep mode
- *   +------------------- SE: sleep enable
+ * 
+ *        MCUCR: MCU control register
+ *   /------+------\
+ *   7 6 5 4 3 2 1 0
+ *   ^ \-+-/ \+/ \+/
+ *   |   |    |   +---- ISC01,0: external interrupt 0 sense control
+ *   |   |    +-------- ISC11,0: external interrupt 1 sense control
+ *   |   +------------- SM2,1,0: sleep mode
+ *   +----------------- SE: sleep enable
  */
 
 /*
@@ -27,18 +27,18 @@
  * int main(void) {
  *   PORTB = 0;
  *   DDRB = ~0;
- *   
+ * 
  *   sleep_set(SLEEP_MODE_PWDOWN);
  *   sleep_en();
- *   
+ * 
  *   PORTB = 1;
  *   sleep_one();
- *   
+ * 
  *   PORTB = 2;
  *   for (;;) {
  *     sleep();
  *   }
- *   
+ * 
  *   return 0;
  * }
  */
