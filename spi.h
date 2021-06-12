@@ -2,7 +2,7 @@
  * Serial peripheral interface
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-11 BETA
+ * 2021-06-12 BETA
  */
 
 /**
@@ -73,7 +73,7 @@
 #define SPI_CK_DIV16   ((b0(SPI2X)<<8)|b0(SPR1)|b1(SPR0))  /* F_CPU/16 */
 #define SPI_CK_DIV32   ((b1(SPI2X)<<8)|b1(SPR1)|b0(SPR0))  /* F_CPU/32 */
 #define SPI_CK_DIV64   ((b0(SPI2X)<<8)|b1(SPR1)|b0(SPR0))  /* F_CPU/64 */
-/*#define SPI_CK_DIV64   ((b1(SPI2X)<<8)|b1(SPR1)|b1(SPR0))*/  /* F_CPU/64 */
+// #define SPI_CK_DIV64   ((b1(SPI2X)<<8)|b1(SPR1)|b1(SPR0))  /* F_CPU/64 */
 #define SPI_CK_DIV128  ((b0(SPI2X)<<8)|b1(SPR1)|b1(SPR0))  /* F_CPU/128 */
 
 /* SPI options (spi_set) */

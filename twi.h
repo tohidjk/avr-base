@@ -2,7 +2,7 @@
  * Two wire serial interface
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 16.02.2021
+ * 2021-06-12 BETA
  */
 
 /**

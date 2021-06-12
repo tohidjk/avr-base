@@ -2,7 +2,7 @@
  * Sleep mode
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-11 BETA
+ * 2021-06-12 BETA
  */
 
 /**
@@ -28,7 +28,7 @@
  *   PORTB = 0;
  *   DDRB = ~0;
  * 
- *   sleep_set(SLEEP_MODE_PWDOWN);
+ *   sleep_set(SLEEP_PWDOWN);
  *   sleep_en();
  * 
  *   PORTB = 1;
@@ -54,13 +54,13 @@
 
 
 /* sleep modes (sleep_set) */
-#define SLEEP_MODE_IDLE       (b0(SM2)|b0(SM1)|b0(SM0))  /* idle mode */
-#define SLEEP_MODE_ADC        (b0(SM2)|b0(SM1)|b1(SM0))  /* adc noise reduction mode */
-#define SLEEP_MODE_PWDOWN     (b0(SM2)|b1(SM1)|b0(SM0))  /* power down mode */
-#define SLEEP_MODE_PWSAVE     (b0(SM2)|b1(SM1)|b1(SM0))  /* power save mode */
-#define SLEEP_MODE_STANDBY    (b1(SM2)|b1(SM1)|b0(SM0))  /* standby mode */
+#define SLEEP_IDLE       (b0(SM2)|b0(SM1)|b0(SM0))  /* idle mode */
+#define SLEEP_ADC        (b0(SM2)|b0(SM1)|b1(SM0))  /* adc noise reduction mode */
+#define SLEEP_PWDOWN     (b0(SM2)|b1(SM1)|b0(SM0))  /* power down mode */
+#define SLEEP_PWSAVE     (b0(SM2)|b1(SM1)|b1(SM0))  /* power save mode */
+#define SLEEP_STANDBY    (b1(SM2)|b1(SM1)|b0(SM0))  /* standby mode */
 #ifndef __AVR_ATmega8__
-#define SLEEP_MODE_EXSTANDBY  (b1(SM2)|b1(SM1)|b1(SM0))  /* extended standby mode */
+#define SLEEP_EXSTANDBY  (b1(SM2)|b1(SM1)|b1(SM0))  /* extended standby mode */
 #endif /* __AVR_ATmega8__ */
 
 

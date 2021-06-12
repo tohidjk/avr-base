@@ -2,7 +2,7 @@
  * Watchdog timer
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-11 BETA
+ * 2021-06-12 BETA
  */
 
 /**
@@ -32,7 +32,7 @@
  *   wdt_en();
  * 
  *   for (PORTB = 1; PORTB; PORTB <<= 1) {
- *     wdr();
+ *     wdt_reset();
  *     _delay_ms(500);
  *   }
  * 
@@ -76,7 +76,7 @@
 #define wdt_set(cnt)  out(WDTCR, cnt)                        /* watchdog timer set */
 #define wdt_en()      {cbi(WDTCR, WDTOE); sbi(WDTCR, WDE);}  /* watchdog timer enable */
 #define wdt_di()      {sbi(WDTCR, WDTOE); cbi(WDTCR, WDE);}  /* watchdog timer disable */
-#define wdr()         {__asm__ __volatile__ ("wdr");}        /* watchdog timer reset counted value */
+#define wdt_reset()   {__asm__ __volatile__ ("wdr");}        /* watchdog timer reset counted value */
 
 
 #endif /* _WDT_H_ */

@@ -2,7 +2,7 @@
  * External interrupt requestes
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-11 BETA
+ * 2021-06-12 BETA
  */
 
 /**
@@ -59,12 +59,12 @@
  *   DDRB = ~0;
  * 
  *   irq_set(IRQ_INT0 | IRQ_INT1);
- *   int0_set(INT0_MODE_FALL);
- *   int1_set(INT1_MODE_RISE);
+ *   irq_int0_set(IRQ_INT0_MODE_FALL);
+ *   irq_int1_set(IRQ_INT1_MODE_RISE);
  *   sei();
  * 
  *   for (;;) {
- *     int1_wait();
+ *     irq_int1_wait();
  *     PORTB ^= 2;
  *   }
  * 
@@ -99,35 +99,35 @@
 #endif /* INT2 */
 
 /* external interrupt request 0 modes (int0_set) */
-#define INT0_MODE_LOW   (b0(ISC01)|b0(ISC00))  /* low level */
-#define INT0_MODE_ANY   (b0(ISC01)|b1(ISC00))  /* any change */
-#define INT0_MODE_FALL  (b1(ISC01)|b0(ISC00))  /* falling edge */
-#define INT0_MODE_RISE  (b1(ISC01)|b1(ISC00))  /* rising edge */
+#define IRQ_INT0_MODE_LOW   (b0(ISC01)|b0(ISC00))  /* low level */
+#define IRQ_INT0_MODE_ANY   (b0(ISC01)|b1(ISC00))  /* any change */
+#define IRQ_INT0_MODE_FALL  (b1(ISC01)|b0(ISC00))  /* falling edge */
+#define IRQ_INT0_MODE_RISE  (b1(ISC01)|b1(ISC00))  /* rising edge */
 
 /* external interrupt request 1 modes (int1_set) */
-#define INT1_MODE_LOW   (b0(ISC11)|b0(ISC10))  /* low level */
-#define INT1_MODE_ANY   (b0(ISC11)|b1(ISC10))  /* any change */
-#define INT1_MODE_FALL  (b1(ISC11)|b0(ISC10))  /* falling edge */
-#define INT1_MODE_RISE  (b1(ISC11)|b1(ISC10))  /* rising edge */
+#define IRQ_INT1_MODE_LOW   (b0(ISC11)|b0(ISC10))  /* low level */
+#define IRQ_INT1_MODE_ANY   (b0(ISC11)|b1(ISC10))  /* any change */
+#define IRQ_INT1_MODE_FALL  (b1(ISC11)|b0(ISC10))  /* falling edge */
+#define IRQ_INT1_MODE_RISE  (b1(ISC11)|b1(ISC10))  /* rising edge */
 
 /* external interrupt request 2 modes (int2_set) */
 #ifdef INT2
-#define INT2_MODE_FALL  b0(ISC2)  /* falling edge */
-#define INT2_MODE_RISE  b1(ISC2)  /* rising edge */
+#define IRQ_INT2_MODE_FALL  b0(ISC2)  /* falling edge */
+#define IRQ_INT2_MODE_RISE  b1(ISC2)  /* rising edge */
 #endif /* INT2 */
 
 
 /* interrupt request macro routines */
-#define irq_app()      {sbi(GICR, IVCE); cbi(GICR, IVSEL);}  /* move interrupts to application flash section */
-#define irq_boot()     {sbi(GICR, IVCE); sbi(GICR, IVSEL);}  /* move interrupts to boot flash section */
-#define irq_set(sgn)   smi(GICR, sgn)             /* external interrupt request enable signals */
-#define int0_set(mod)  smi(MCUCR, mod)            /* set external interrupt 0 mode */
-#define int1_set(mod)  smi(MCUCR, mod)            /* set external interrupt 1 mode */
-#define int0_wait()    wait_set_bit(GIFR, INTF0)  /* wait to external interrupt 0 signal */
-#define int1_wait()    wait_set_bit(GIFR, INTF1)  /* wait to external interrupt 1 signal */
+#define irq_app()          {sbi(GICR, IVCE); cbi(GICR, IVSEL);}  /* move interrupts to application flash section */
+#define irq_boot()         {sbi(GICR, IVCE); sbi(GICR, IVSEL);}  /* move interrupts to boot flash section */
+#define irq_set(sgn)       smi(GICR, sgn)             /* external interrupt request enable signals */
+#define irq_int0_set(mod)  smi(MCUCR, mod)            /* set external interrupt 0 mode */
+#define irq_int0_wait()    wait_set_bit(GIFR, INTF0)  /* wait to external interrupt 0 signal */
+#define irq_int1_set(mod)  smi(MCUCR, mod)            /* set external interrupt 1 mode */
+#define irq_int1_wait()    wait_set_bit(GIFR, INTF1)  /* wait to external interrupt 1 signal */
 #ifdef INT2
-#define int2_set(mod)  smi(MCUCSR, mod)           /* set external interrupt 2 mode */
-#define int2_wait()    wait_set_bit(GIFR, INTF2)  /* wait to external interrupt 2 signal */
+#define irq_int2_set(mod)  smi(MCUCSR, mod)           /* set external interrupt 2 mode */
+#define irq_int2_wait()    wait_set_bit(GIFR, INTF2)  /* wait to external interrupt 2 signal */
 #endif /* INT2 */
 
 

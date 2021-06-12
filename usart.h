@@ -2,7 +2,7 @@
  * Universal synchronous and asynchronous serial receiver and transmitter
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-11 BETA
+ * 2021-06-12 BETA
  */
 
 /**
@@ -118,7 +118,8 @@
 #define USART_DATA_9BIT  (b1(UCSZ2)|((b1(UCSZ1)|b1(UCSZ0))<<16))  /* 9bit character size */
 
 /* USART standard baud rates (usart_baud) */
-/* 110,300,600,1200,2400,4800,9600,14400,19200,28800,38400,56000,57600,76800,115200,230400,250000,500000,1000000 */
+/* 110,300,600,1200,2400,4800,9600,14400,19200,28800,38400,
+ * 56000,57600,76800,115200,230400,250000,500000,1000000 */
 #define USART_BAUD_9600    9600
 #define USART_BAUD_19200   19200
 #define USART_BAUD_38400   38400
@@ -134,7 +135,7 @@
 /* USART macro routines */
 #define usart_set(cnt)        {out(UCSRB, cnt); out(UCSRA, (cnt)>>8); out(UCSRC, (cnt)>>16);}  /* set USART */
 #define usart_baud(bdr)       out(UBRR, (F_CPU+(bdr)*8)/((bdr)*16)-1)  /* for Asynchronous and synchronous (master) */
-/*#define usart_setbaud()       out(UBRR, UBRR_VALUE)*/  /* <util/setbaud.h> for Asynchronous and synchronous (master) */
+// #define usart_setbaud()       out(UBRR, UBRR_VALUE)  /* <util/setbaud.h> for Asynchronous and synchronous (master) */
 #define usart_signal(sgn)     smi(UCSRB, sgn)                /* USART enable signals */
 #define usart_tx_data(dta)    {out(UDR, dta); bis(dta, 0x100)? sbi(UCSRB, TXB8): cbi(UCSRB, TXB8);}  /* send data */
 #define usart_rx_data()       (in(UDR)|(bis(UCSRB, RXB8)? 0x100: 0))  /* read received data */

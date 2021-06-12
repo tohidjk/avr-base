@@ -2,7 +2,7 @@
  * Timer/counter0
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-11 BETA
+ * 2021-06-12 BETA
  */
 
 /**
@@ -119,7 +119,7 @@
 #define timer0_value(vlu)       out(TCNT0, vlu)           /* set timer/counter0 counted value */
 #define timer0_signal(sgn)      smi(TIMSK, sgn)           /* timer/counter0 enable signals */
 #define timer0_ovf_wait()       wait_set_bit(TIFR, TOV0)  /* wait ot timer/counter0 overflow signal */
-#define timer0_di()             timer0_set(TIMER0_CK_STOP)  /* timer/counter0 disable */
+#define timer0_di()             timer0_set(TIMER0_CK_STOP) /* timer/counter0 disable */
 #define timer0_value_get()      in(TCNT0)                 /* read timer/counter0 counted value */
 #ifdef OCR0
 #define timer0_compare(cmp)     out(OCR0, cmp)            /* set timer/counter0 compare match value */

@@ -2,7 +2,7 @@
  * Parallel input/ouput ports
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-11 BETA
+ * 2021-06-12 BETA
  */
 
 /**
@@ -85,9 +85,9 @@
 
 /* io ports macro routines */
 #define IOB(reg, bit, x)   {if((x)==0) cbi(reg,bit); else if((x)==1) sbi(reg,bit); else if((x)==-1) ibi(reg,bit);}  /* change bit in register or variable */
-#define PORT(prt, bit, x)  IOB(PORT##prt, bit, x)  /* change bit in data register */
-#define DDR(prt, bit, x)   IOB(DDR##prt, bit, x)   /* change bit in data direction register */
-#define PIN(pin, bit)      ((PIN##pin) & b1(bit))  /* get bit in input pins register */
+#define PORT(prt, bit, x)  IOB(PORT ## prt, bit, x)  /* change bit in data register */
+#define DDR(prt, bit, x)   IOB(DDR ## prt, bit, x)   /* change bit in data direction register */
+#define PIN(pin, bit)      ((PIN ## pin) & b1(bit))  /* get bit in input pins register */
 
 
 #endif /* _PIO_H_ */
