@@ -2,70 +2,34 @@
  * Analog to digital converter
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *       ADCSRA: ADC control and status register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ \-+-/
- *   | | | | |   +----- ADPS2,1,0: prescaler select
- *   | | | | +--------- ADIE: interrupt enable
- *   | | | +----------- ADIF: interrupt flag
- *   | | +------------- m32,m16=ADATE: auto trigger enable - m8=ADFR: free runing
- *   | +--------------- ADSC: start conversion
- *   +----------------- ADEN: enable
+ *   ADCSRA: ADC control and status register
+ *     0,1,2 -> ADPS0,1,2: prescaler select
+ *     3 -> ADIE: interrupt enable
+ *     4 -> ADIF: interrupt flag
+ *     5 -> m32,m16=ADATE: auto trigger enable - m8=ADFR: free runing
+ *     6 -> ADSC: start conversion
+ *     7 -> ADEN: enable
  * 
- *        ADMUX: ADC multiplexer selection register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   \+/ ^ \---+---/
- *    |  |     +------- MUX4,3,2,1,0: analog channel and gain selection
- *    |  +------------- ADLAR: left adjust result
- *    +---------------- REFS1,0: reference selection
+ *   ADMUX: ADC multiplexer selection register
+ *     0,1,2,3,4 -> MUX0,1,2,3,4: analog channel and gain selection
+ *     5 -> ADLAR: left adjust result
+ *     6,7 -> REFS0,1: reference selection
  * 
- *        SFIOR: special function IO register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   \-+-/ ^ ^ ^ ^ ^
- *     |   | | | | +--- PSR10: prescaler reset timer/counter1&0
- *     |   | | | +----- PSR2: prescaler Reset timer/counter2
- *     |   | | +------- PUD: pull-up disable
- *     |   | +--------- ACME: analog comparator multiplexer enable
- *     |   +----------- m8=ADHSM: ADC high speed mode
- *     +--------------- ADTS2,1,0: ADC auto trigger source
+ *   SFIOR: special function IO register
+ *     0 -> PSR10: prescaler reset timer/counter1&0
+ *     1 -> PSR2: prescaler Reset timer/counter2
+ *     2 -> PUD: pull-up disable
+ *     3 -> ACME: analog comparator multiplexer enable
+ *     4 -> m8=ADHSM: ADC high speed mode
+ *     5,6,7 -> ADTS0,1,2: ADC auto trigger source
  * 
- *   ADCW=ADCH+ADCL: data registers
- */
-
-/*
- * Example:
- * 
- * #include <avr/io.h>
- * #include "adc.h"
- * 
- * int main(void) {
- *   PORTB = 0;
- *   DDRB = ~0;
- * 
- *   adc_set(ADC_CK_DIV64 | ADC_VREF_AREF | ADC_AUTO_TRIGGER | ADC_FREE_RUN | ADC_START);
- *   adc_signal(ADC_INT_COMPLETE);
- *   adc_input(ADC0);
- *   adc_en();
- *   sei();
- * 
- *   for (;;) {
- *     adc_wait();
- *     PORTB = (adc_data() >> 2);
- *   }
- * 
- *   return 0;
- * }
- * 
- * ISR_ADC() {}
+ *   ADCW=ADCH+ADCL: ADC data registers
  */
 
 
@@ -98,20 +62,17 @@
 #define ADC_DATA_RIGHT_ADJUST  (b0(ADLAR)<<8)  /* data result right adjust */
 #define ADC_DATA_LEFT_ADJUST   (b1(ADLAR)<<8)  /* data result left adjust */
 #define ADC_START              b1(ADSC)        /* start convertion */
-#ifdef ADATE
-#define ADC_AUTO_TRIGGER       b1(ADATE)       /* auto trigger enable */
-#endif /* ADATE */
 
 /* analog to digital converter auto trigger modes (adc_set) */
 #ifdef ADATE
-#define ADC_FREE_RUN             ((b0(ADTS2)|b0(ADTS1)|b0(ADTS0))<<16)  /* free running */
-#define ADC_TRIGGER_ACMP         ((b0(ADTS2)|b0(ADTS1)|b1(ADTS0))<<16)  /* analog comparator */
-#define ADC_TRIGGER_IRQ0         ((b0(ADTS2)|b1(ADTS1)|b0(ADTS0))<<16)  /* external IRQ0 */
-#define ADC_TRIGGER_TIMER0_CMP   ((b0(ADTS2)|b1(ADTS1)|b1(ADTS0))<<16)  /* timer/counter0 compare match */
-#define ADC_TRIGGER_TIMER0_OVF   ((b1(ADTS2)|b0(ADTS1)|b0(ADTS0))<<16)  /* timer/counter0 overflow */
-#define ADC_TRIGGER_TIMER1_CMPB  ((b1(ADTS2)|b0(ADTS1)|b1(ADTS0))<<16)  /* timer/counter1 compare match B */
-#define ADC_TRIGGER_TIMER1_OVF   ((b1(ADTS2)|b1(ADTS1)|b0(ADTS0))<<16)  /* timer/counter1 overflow */
-#define ADC_TRIGGER_TIMER1_CAPT  ((b1(ADTS2)|b1(ADTS1)|b1(ADTS0))<<16)  /* timer/counter1 capture event */
+#define ADC_FREE_RUN             (b1(ADATE)|((uint32_t)(b0(ADTS2)|b0(ADTS1)|b0(ADTS0))<<16))  /* free running */
+#define ADC_TRIGGER_ACMP         (b1(ADATE)|((uint32_t)(b0(ADTS2)|b0(ADTS1)|b1(ADTS0))<<16))  /* analog comparator */
+#define ADC_TRIGGER_IRQ0         (b1(ADATE)|((uint32_t)(b0(ADTS2)|b1(ADTS1)|b0(ADTS0))<<16))  /* external IRQ0 */
+#define ADC_TRIGGER_TIMER0_CMP   (b1(ADATE)|((uint32_t)(b0(ADTS2)|b1(ADTS1)|b1(ADTS0))<<16))  /* timer/counter0 compare match */
+#define ADC_TRIGGER_TIMER0_OVF   (b1(ADATE)|((uint32_t)(b1(ADTS2)|b0(ADTS1)|b0(ADTS0))<<16))  /* timer/counter0 overflow */
+#define ADC_TRIGGER_TIMER1_CMPB  (b1(ADATE)|((uint32_t)(b1(ADTS2)|b0(ADTS1)|b1(ADTS0))<<16))  /* timer/counter1 compare match B */
+#define ADC_TRIGGER_TIMER1_OVF   (b1(ADATE)|((uint32_t)(b1(ADTS2)|b1(ADTS1)|b0(ADTS0))<<16))  /* timer/counter1 overflow */
+#define ADC_TRIGGER_TIMER1_CAPT  (b1(ADATE)|((uint32_t)(b1(ADTS2)|b1(ADTS1)|b1(ADTS0))<<16))  /* timer/counter1 capture event */
 #endif /* ADATE */
 #ifdef ADFR
 #define ADC_FREE_RUN             b1(ADFR)   /* free running */
@@ -158,7 +119,7 @@
 
 
 /* analog to digital converter macro routines */
-#define adc_set(cnt)     {out(ADCSRA, cnt); out(ADMUX, (cnt)>>8); smi(SFIOR, (cnt)>>16);}  /* set adc */
+#define adc_set(cnt)     {out(ADCSRA, (cnt)&0xFF); out(ADMUX, ((cnt)>>8)&0xFF); smi(SFIOR, ((uint32_t)(cnt))>>16);}  /* set adc */
 #define adc_input(cnl)   {cmi(ADMUX, b1(4)|b1(MUX3)|b1(MUX2)|b1(MUX1)|b1(MUX0)); smi(ADMUX, cnl);}  /* adc set chanel and gain (4 replace MUX4 for reject problem) */
 #define adc_signal(sgn)  smi(ADCSRA, sgn)            /* adc enable signals */
 #define adc_en()         sbi(ADCSRA, ADEN)           /* adc enable */
@@ -170,6 +131,31 @@
 
 /* analog to digital conversion complete interrupt service routine */
 #define ISR_ADC()  ISR(ADC_vect)
+
+
+#ifdef _ADC_H_TEST_
+
+int main(void) {
+	PORTB = 0;
+	DDRB = ~0;
+
+	adc_set(ADC_CK_DIV64 | ADC_VREF_AREF | ADC_FREE_RUN | ADC_START);
+	adc_signal(ADC_INT_COMPLETE);
+	adc_input(ADC0);
+	adc_en();
+	sei();
+
+	for (;;) {
+		adc_wait();
+		PORTB = (adc_data() >> 2);
+	}
+
+	return 0;
+}
+
+ISR_ADC() {}
+
+#endif /* _ADC_H_TEST_ */
 
 
 #endif /* _ADC_H_ */

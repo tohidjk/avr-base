@@ -2,80 +2,38 @@
  * External interrupt requestes
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *       MCUCSR: MCU control and status register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^   ^ ^ ^ ^ ^
- *   | |   | | | | +--- PORF: power-on reset flag
- *   | |   | | | +----- EXTRF: external reset flag
- *   | |   | | +------- BORF: brown-out reset flag
- *   | |   | +--------- WDRF: watchdog reset flag
- *   | |   +----------- JTRF: JTAG reset flag
- *   | +--------------- ISC2: external interrupt 2 sense control
- *   +----------------- JTD: JTAG interface disable
+ *   MCUCSR: MCU control and status register
+ *     0 -> PORF: power-on reset flag
+ *     1 -> EXTRF: external reset flag
+ *     2 -> BORF: brown-out reset flag
+ *     3 -> WDRF: watchdog reset flag
+ *     4 -> JTRF: JTAG reset flag
+ *     6 -> ISC2: external interrupt 2 sense control
+ *     7 -> JTD: JTAG interface disable
  * 
- *        MCUCR: MCU control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ \-+-/ \+/ \+/
- *   |   |    |   +---- ISC01,0: external interrupt 0 sense control
- *   |   |    +-------- ISC11,0: external interrupt 1 sense control
- *   |   +------------- SM2,1,0: sleep mode
- *   +----------------- SE: sleep enable
+ *   MCUCR: MCU control register
+ *     0,1 -> ISC00,1: external interrupt 0 sense control
+ *     2,3 -> ISC10,1: external interrupt 1 sense control
+ *     4,5,6 -> SM0,1,2: sleep mode
+ *     7 -> SE: sleep enable
  * 
- *        GIFR: general interrupt flag register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^
- *   | | +------------- INTF2: external interrupt 2 flag
- *   | +--------------- INTF0: external interrupt 0 flag
- *   +----------------- INTF1: external interrupt 1 flag
+ *   GIFR: general interrupt flag register
+ *     5 -> INTF2: external interrupt 2 flag
+ *     6 -> INTF0: external interrupt 0 flag
+ *     7 -> INTF1: external interrupt 1 flag
  * 
- *        GICR: general interrupt control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^       ^ ^
- *   | | |       | +--- IVCE: interrupt vector change enable
- *   | | |       +----- IVSEL: interrupt vector select
- *   | | +------------- INT2: external interrupt request 2 enable
- *   | +--------------- INT0: external interrupt request 0 enable
- *   +----------------- INT1: external interrupt request 1 enable
- */
-
-/*
- * Example:
- * 
- * #include <avr/io.h>
- * #include "irq.h"
- * 
- * int main(void) {
- *   PORTB = 0;
- *   DDRB = ~0;
- * 
- *   irq_set(IRQ_INT0 | IRQ_INT1);
- *   irq_int0_set(IRQ_INT0_MODE_FALL);
- *   irq_int1_set(IRQ_INT1_MODE_RISE);
- *   sei();
- * 
- *   for (;;) {
- *     irq_int1_wait();
- *     PORTB ^= 2;
- *   }
- * 
- *   return 0;
- * }
- * 
- * ISR_INT0() {
- *   PORTB ^= 1;
- * }
- * 
- * ISR_INT1() {}
+ *   GICR: general interrupt control register
+ *     0 -> IVCE: interrupt vector change enable
+ *     1 -> IVSEL: interrupt vector select
+ *     5 -> INT2: external interrupt request 2 enable
+ *     6 -> INT0: external interrupt request 0 enable
+ *     7 -> INT1: external interrupt request 1 enable
  */
 
 
@@ -139,6 +97,34 @@
 /* external interrupt request 2 service routine */
 #define ISR_INT2()  ISR(INT2_vect)
 #endif /* INT2 */
+
+
+#ifdef _IRQ_H_TEST_
+
+int main(void) {
+	PORTB = 0;
+	DDRB = ~0;
+
+	irq_set(IRQ_INT0 | IRQ_INT1);
+	irq_int0_set(IRQ_INT0_MODE_FALL);
+	irq_int1_set(IRQ_INT1_MODE_RISE);
+	sei();
+
+	for (;;) {
+		irq_int1_wait();
+		PORTB ^= 2;
+	}
+
+	return 0;
+}
+
+ISR_INT0() {
+	PORTB ^= 1;
+}
+
+ISR_INT1() {}
+
+#endif /* _IRQ_H_TEST_ */
 
 
 #endif /* _IRQ_H_ */

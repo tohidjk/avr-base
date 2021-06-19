@@ -2,45 +2,16 @@
  * Watchdog timer
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        WDTCR: watchdog timer control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *         ^ ^ \-+-/
- *         | |   +----- WDP2,1,0: prescaler
- *         | +--------- WDE: enable
- *         +----------- WDTOE: turn-off enable
- */
-
-/*
- * Example:
- * 
- * #include <avr/io.h>
- * #include <util/delay.h>
- * #include "wdt.h"
- * 
- * int main(void) {
- *   PORTB = 0;
- *   DDRB = ~0;
- * 
- *   wdt_set(WDT_CK_2S);
- *   wdt_en();
- * 
- *   for (PORTB = 1; PORTB; PORTB <<= 1) {
- *     wdt_reset();
- *     _delay_ms(500);
- *   }
- * 
- *   PORTB = ~0;
- *   for (;;);
- * 
- *   return 0;
- * }
+ *   WDTCR: watchdog timer control register
+ *     0,1,2 -> WDP0,1,2: prescaler
+ *     3 -> WDE: enable
+ *     4 -> WDTOE: turn-off enable
  */
 
 
@@ -51,6 +22,11 @@
 #include "util.h"
 
 /* WDTCR=|||WDTOE|WDE|WDP2|WDP1|WDP0 */
+
+
+#ifndef WDTOE
+#define WDTOE WDCE
+#endif
 
 
 /* watchdog timer clock prescaler (F_WDOSC: 1MHz) (wdt_set) */
@@ -77,6 +53,31 @@
 #define wdt_en()      {cbi(WDTCR, WDTOE); sbi(WDTCR, WDE);}  /* watchdog timer enable */
 #define wdt_di()      {sbi(WDTCR, WDTOE); cbi(WDTCR, WDE);}  /* watchdog timer disable */
 #define wdt_reset()   {__asm__ __volatile__ ("wdr");}        /* watchdog timer reset counted value */
+
+
+#ifdef _WDT_H_TEST_
+
+#include <util/delay.h>
+
+int main(void) {
+	PORTB = 0;
+	DDRB = ~0;
+
+	wdt_set(WDT_CK_2S);
+	wdt_en();
+
+	for (PORTB = 1; PORTB; PORTB <<= 1) {
+		wdt_reset();
+		_delay_ms(500);
+	}
+
+	PORTB = ~0;
+	for (;;);
+
+	return 0;
+}
+
+#endif /* _WDT_H_TEST_ */
 
 
 #endif /* _WDT_H_ */

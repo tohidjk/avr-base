@@ -2,7 +2,7 @@
  * Utils
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 
@@ -10,6 +10,7 @@
 #define _UTIL_H_ 1
 
 
+#include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 

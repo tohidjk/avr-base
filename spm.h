@@ -2,23 +2,20 @@
  * Store program memory (boot loader)
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        SPMCR: store program memory control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^   ^ ^ ^ ^ ^
- *   | |   | | | | +--- SPMEN: enable
- *   | |   | | | +----- PGERS: page erase
- *   | |   | | +------- PGWRT: page write
- *   | |   | +--------- BLBSET: boot lock bit set
- *   | |   +----------- RWWSRE: read while write section read enable
- *   | +--------------- RWWSB: read while write section busy
- *   +----------------- SPMIE: interrupt enable
+ *   SPMCR: store program memory control register
+ *     0 -> SPMEN: enable
+ *     1 -> PGERS: page erase
+ *     2 -> PGWRT: page write
+ *     3 -> BLBSET: boot lock bit set
+ *     4 -> RWWSRE: read while write section read enable
+ *     6 -> RWWSB: read while write section busy
+ *     7 -> SPMIE: interrupt enable
  */
 
 

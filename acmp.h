@@ -2,60 +2,28 @@
  * Analog comparator
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        ACSR: analog comparator control and status register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ ^ \+/
- *   | | | | | |  +---- ACIS1,0: interrupt mode
- *   | | | | | +------- ACIC: input capture enable
- *   | | | | +--------- ACIE: interrupt enable
- *   | | | +----------- ACI: interrupt flag
- *   | | +------------- ACO: output
- *   | +--------------- ACBG: bandgap select
- *   +----------------- ACD: disable
+ *   ACSR: analog comparator control and status register
+ *     0,1 -> ACIS0,1: interrupt mode
+ *     2 -> ACIC: input capture enable
+ *     3 -> ACIE: interrupt enable
+ *     4 -> ACI: interrupt flag
+ *     5 -> ACO: output
+ *     6 -> ACBG: bandgap select
+ *     7 -> ACD: disable
  * 
- *        SFIOR: special function IO register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   \-+-/ ^ ^ ^ ^ ^
- *     |   | | | | +--- PSR10: prescaler reset timer/counter1&0
- *     |   | | | +----- PSR2: prescaler Reset timer/counter2
- *     |   | | +------- PUD: pull-up disable
- *     |   | +--------- ACME: analog comparator multiplexer enable
- *     |   +----------- m8=ADHSM: ADC high speed mode
- *     +--------------- ADTS2,1,0: ADC auto trigger source
- */
-
-/*
- * Example:
- * 
- * #include <avr/io.h>
- * #include "acmp.h"
- * 
- * int main(void) {
- *   PORTB = 0;
- *   DDRB = ~0;
- * 
- *   acmp_set(ACMP_BANDGAP_VREF | ACMP_INT_TOGGLE);
- *   acmp_en();
- * 
- *   for (;;) {
- *     acmp_wait()
- *     PORTB ^= 1;
- *   }
- * 
- *   return 0;
- * }
- * 
- * ISR_ACMP() {
- *   PORTB ^= 2;
- * }
+ *   SFIOR: special function IO register
+ *     0 -> PSR10: prescaler reset timer/counter1&0
+ *     1 -> PSR2: prescaler Reset timer/counter2
+ *     2 -> PUD: pull-up disable
+ *     3 -> ACME: analog comparator multiplexer enable
+ *     4 -> m8=ADHSM: ADC high speed mode
+ *     5,6,7 -> ADTS0,1,2: ADC auto trigger source
  */
 
 
@@ -80,7 +48,7 @@
 
 
 /* analog comparator macro routines */
-#define acmp_set(cnt)  {out(ACSR, cnt); smi(SFIOR, (cnt)>>8);}  /* set analog comparator */
+#define acmp_set(cnt)  {out(ACSR, (cnt)&0xFF); smi(SFIOR, (cnt)>>8);}  /* set analog comparator */
 #define acmp_en()      cbi(ACSR, ACD)           /* analog comparator enable */
 #define acmp_di()      sbi(ACSR, ACD)           /* analog comparator disable */
 #define acmp_wait()    wait_set_bit(ACSR, ACI)  /* wait to analog comparator signal */
@@ -88,6 +56,30 @@
 
 /* analog comparator interrupt service routine */
 #define ISR_ACMP()  ISR(ANA_COMP_vect)
+
+
+#ifdef _ACMP_H_TEST_
+
+int main(void) {
+	PORTB = 0;
+	DDRB = ~0;
+
+	acmp_set(ACMP_BANDGAP_VREF | ACMP_INT_TOGGLE);
+	acmp_en();
+
+	for (;;) {
+		acmp_wait()
+		PORTB ^= 1;
+	}
+
+	return 0;
+}
+
+ISR_ACMP() {
+	PORTB ^= 2;
+}
+
+#endif /* _ACMP_H_TEST_ */
 
 
 #endif /* _ACMP_H_ */

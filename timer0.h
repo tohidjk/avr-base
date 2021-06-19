@@ -2,71 +2,41 @@
  * Timer/counter0
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        TCCR0: timer/counter0 control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ \+/ ^ \-+-/
- *   | |  |  |   +----- CS02,1,0: clock select
- *   | |  |  +--------- WGM01: waveform generation mode
- *   | |  +------------ COM01,0: compare match output mode
- *   | +--------------- WGM00: waveform generation mode
- *   +----------------- FOC0: force output compare
+ *   TCCR0: timer/counter0 control register
+ *     0,1,2 -> CS00,1,2: clock select
+ *     3 -> WGM01: waveform generation mode
+ *     4,5 -> COM00,1: compare match output mode
+ *     6 -> WGM00: waveform generation mode
+ *     7 -> FOC0: force output compare
  * 
- *        TIFR: timer/counter interrupt flag register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ ^ ^ ^
- *   | | | | | | | +--- TOV0: timer/counter0 overflow flag
- *   | | | | | | +----- OCF0: timer/counter0 output compare match flag
- *   | | | | | +------- TOV1: timer/counter1 overflow flag
- *   | | | | +--------- OCF1B: timer/counter1 output compare match B flag
- *   | | | +----------- OCF1A: timer/counter1 output compare match A flag
- *   | | +------------- ICF1: timer/counter1 input capture flag
- *   | +--------------- TOV2: timer/counter2 overflow flag
- *   +----------------- OCF2: timer/counter2 output compare match flag
+ *   TIFR: timer/counter interrupt flag register
+ *     0 -> TOV0: timer/counter0 overflow flag
+ *     1 -> OCF0: timer/counter0 output compare match flag
+ *     2 -> TOV1: timer/counter1 overflow flag
+ *     3 -> OCF1B: timer/counter1 output compare match B flag
+ *     4 -> OCF1A: timer/counter1 output compare match A flag
+ *     5 -> ICF1: timer/counter1 input capture flag
+ *     6 -> TOV2: timer/counter2 overflow flag
+ *     7 -> OCF2: timer/counter2 output compare match flag
  * 
- *        TIMSK: timer/counter interrupt mask register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ ^ ^ ^
- *   | | | | | | | +--- TOIE0: timer/counter0 overflow interrupt enable
- *   | | | | | | +----- OCIE0: timer/counter0 output compare match interrupt enable
- *   | | | | | +------- TOIE1: timer/counter1 overflow interrupt enable
- *   | | | | +--------- OCIE1B: timer/counter1 output compare match B interrupt enable
- *   | | | +----------- OCIE1A: timer/counter1 output compare match A interrupt enable
- *   | | +------------- TICIE1: timer/counter1 input capture interrupt enable
- *   | +--------------- TOIE2: timer/counter2 overflow interrupt enable
- *   +----------------- OCIE2: timer/counter2 output compare match interrupt enable
+ *   TIMSK: timer/counter interrupt mask register
+ *     0 -> TOIE0: timer/counter0 overflow interrupt enable
+ *     1 -> OCIE0: timer/counter0 output compare match interrupt enable
+ *     2 -> TOIE1: timer/counter1 overflow interrupt enable
+ *     3 -> OCIE1B: timer/counter1 output compare match B interrupt enable
+ *     4 -> OCIE1A: timer/counter1 output compare match A interrupt enable
+ *     5 -> TICIE1: timer/counter1 input capture interrupt enable
+ *     6 -> TOIE2: timer/counter2 overflow interrupt enable
+ *     7 -> OCIE2: timer/counter2 output compare match interrupt enable
  * 
  *   TCNT0: timer/counter0 register
  *   OCR0: timer/counter0 output compare register
- */
-
-/*
- * Example:
- * 
- * #include <avr/io.h>
- * #include "timer0.h"
- * 
- * int main(void) {
- *   PORTB = 0;
- *   DDRB = ~0;
- * 
- *   timer0_set(TIMER0_CK_T0_FALL);
- *   timer0_value(0);
- * 
- *   for (;;) {
- *     PORTB = timer0_value_get();
- *   }
- * 
- *   return 0;
- * }
  */
 
 
@@ -134,6 +104,25 @@
 #endif /* OCR0 */
 /* timer/counter0 overflow interrupt service routine */
 #define ISR_TIMER0_OVF()  ISR(TIMER0_OVF_vect)
+
+
+#ifdef _TIMER0_H_TEST_
+
+int main(void) {
+	PORTB = 0;
+	DDRB = ~0;
+
+	timer0_set(TIMER0_CK_T0_FALL);
+	timer0_value(0);
+
+	for (;;) {
+		PORTB = timer0_value_get();
+	}
+
+	return 0;
+}
+
+#endif /* _TIMER0_H_TEST_ */
 
 
 #endif /* _TIMER0_H_ */

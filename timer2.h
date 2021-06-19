@@ -2,90 +2,47 @@
  * Timer/counter2
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        ASSR: asynchronous status register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *           ^ ^ ^ ^
- *           | | | +--- TCR2UB: timer/counter2 control register update busy
- *           | | +----- OCR2UB: timer/counter2 output compare register update busy
- *           | +------- TCN2UB : timer/counter2 update busy
- *           +--------- AS2: timer/counter2 asynchronous clock select
+ *   ASSR: asynchronous status register
+ *     0 -> TCR2UB: timer/counter2 control register update busy
+ *     1 -> OCR2UB: timer/counter2 output compare register update busy
+ *     2 -> TCN2UB : timer/counter2 update busy
+ *     3 -> AS2: timer/counter2 asynchronous clock select
  * 
- *        TCCR2: timer/counter2 control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ \+/ ^ \-+-/
- *   | |  |  |   +----- CS22,1,0: clock select
- *   | |  |  +--------- WGM21: waveform generation mode
- *   | |  +------------ COM21,0: compare output mode
- *   | +--------------- WGM20: waveform generation mode
- *   +----------------- FOC2: force output compare
+ *   TCCR2: timer/counter2 control register
+ *     0,1,2 -> CS20,1,2: clock select
+ *     3 -> WGM21: waveform generation mode
+ *     4,5 -> COM20,1: compare output mode
+ *     6 -> WGM20: waveform generation mode
+ *     7 -> FOC2: force output compare
  * 
- *        TIFR: timer/counter interrupt flag register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ ^ ^ ^
- *   | | | | | | | +--- TOV0: timer/counter0 overflow flag
- *   | | | | | | +----- OCF0: timer/counter0 output compare match flag
- *   | | | | | +------- TOV1: timer/counter1 overflow flag
- *   | | | | +--------- OCF1B: timer/counter1 output compare match B flag
- *   | | | +----------- OCF1A: timer/counter1 output compare match A flag
- *   | | +------------- ICF1: timer/counter1 input capture flag
- *   | +--------------- TOV2: timer/counter2 overflow flag
- *   +----------------- OCF2: timer/counter2 output compare match flag
+ *   TIFR: timer/counter interrupt flag register
+ *     0 -> TOV0: timer/counter0 overflow flag
+ *     1 -> OCF0: timer/counter0 output compare match flag
+ *     2 -> TOV1: timer/counter1 overflow flag
+ *     3 -> OCF1B: timer/counter1 output compare match B flag
+ *     4 -> OCF1A: timer/counter1 output compare match A flag
+ *     5 -> ICF1: timer/counter1 input capture flag
+ *     6 -> TOV2: timer/counter2 overflow flag
+ *     7 -> OCF2: timer/counter2 output compare match flag
  * 
- *        TIMSK: timer/counter interrupt mask register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ ^ ^ ^
- *   | | | | | | | +--- TOIE0: timer/counter0 overflow interrupt enable
- *   | | | | | | +----- OCIE0: timer/counter0 output compare match interrupt enable
- *   | | | | | +------- TOIE1: timer/counter1 overflow interrupt enable
- *   | | | | +--------- OCIE1B: timer/counter1 output compare match B interrupt enable
- *   | | | +----------- OCIE1A: timer/counter1 output compare match A interrupt enable
- *   | | +------------- TICIE1: timer/counter1 input capture interrupt enable
- *   | +--------------- TOIE2: timer/counter2 overflow interrupt enable
- *   +----------------- OCIE2: timer/counter2 output compare match interrupt enable
+ *   TIMSK: timer/counter interrupt mask register
+ *     0 -> TOIE0: timer/counter0 overflow interrupt enable
+ *     1 -> OCIE0: timer/counter0 output compare match interrupt enable
+ *     2 -> TOIE1: timer/counter1 overflow interrupt enable
+ *     3 -> OCIE1B: timer/counter1 output compare match B interrupt enable
+ *     4 -> OCIE1A: timer/counter1 output compare match A interrupt enable
+ *     5 -> TICIE1: timer/counter1 input capture interrupt enable
+ *     6 -> TOIE2: timer/counter2 overflow interrupt enable
+ *     7 -> OCIE2: timer/counter2 output compare match interrupt enable
  * 
  *   TCNT2: timer/counter2 register
  *   OCR2: timer/counter2 output compare match register
- */
-
-/*
- * Example:
- * 
- * #include <avr/io.h>
- * #include "timer2.h"
- * 
- * unsigned char i = 0;
- * 
- * int main(void) {
- *   PORTB = 0;
- *   DDRB = ~0;
- * 
- *   timer2_rtc_mode_en();
- *   timer2_set(TIMER2_CK_DIV128);
- *   timer2_value(0);
- *   timer2_compare(0);
- *   timer2_signal(TIMER2_INT_OVF);
- *   sei();
- * 
- *   for (;;) {
- *     PORTB = i;
- *   }
- * 
- *   return 0;
- * }
- * 
- * ISR_TIMER2_OVF() {
- *   i++;
- * }
  */
 
 
@@ -147,6 +104,35 @@
 #define ISR_TIMER2_CMP()  ISR(TIMER2_COMP_vect)
 /* timer/counter2 overflow interrupt service routine */
 #define ISR_TIMER2_OVF()  ISR(TIMER2_OVF_vect)
+
+
+#ifdef _TIMER2_H_TEST_
+
+uint8_t i = 0;
+
+int main(void) {
+	PORTB = 0;
+	DDRB = ~0;
+
+	timer2_rtc_mode_en();
+	timer2_set(TIMER2_CK_DIV128);
+	timer2_value(0);
+	timer2_compare(0);
+	timer2_signal(TIMER2_INT_OVF);
+	sei();
+
+	for (;;) {
+		PORTB = i;
+	}
+
+	return 0;
+}
+
+ISR_TIMER2_OVF() {
+	i++;
+}
+
+#endif /* _TIMER2_H_TEST_ */
 
 
 #endif /* _TIMER2_H_ */

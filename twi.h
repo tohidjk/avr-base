@@ -2,65 +2,31 @@
  * Two wire serial interface
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        TWSR: TWI status register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   \---+---/   \+/
- *       |        +---- TWPS1,0: prescaler
- *       +------------- TWS7,6,5,4,3: status
+ *   TWSR: TWI status register
+ *     0,1 -> TWPS0,1: prescaler
+ *     3,4,5,6,7 -> TWS3,4,5,6,7: status
  * 
- *        TWAR: TWI slave address register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   \-----+-----/ ^
- *         |       +--- TWGCE: general call recognition enable
- *         +----------- TWA6,5,4,3,2,1,0: slave address
+ *   TWAR: TWI slave address register
+ *     0 -> TWGCE: general call recognition enable
+ *     1,2,3,4,5,6,7 -> TWA0,1,2,3,4,5,6: slave address
  * 
- *        TWCR: TWI control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ ^   ^
- *   | | | | | |   +--- TWIE: interrupt enable
- *   | | | | | +------- TWEN: enable
- *   | | | | +--------- TWWC: write collition flag
- *   | | | +----------- TWSTO: stop condition
- *   | | +------------- TWSTA: start condition
- *   | +--------------- TWEA: acknowledge enable
- *   +----------------- TWINT: interrupt flag
+ *   TWCR: TWI control register
+ *     0 -> TWIE: interrupt enable
+ *     2 -> TWEN: enable
+ *     3 -> TWWC: write collition flag
+ *     4 -> TWSTO: stop condition
+ *     5 -> TWSTA: start condition
+ *     6 -> TWEA: acknowledge enable
+ *     7 -> TWINT: interrupt flag
  * 
- *   TWBR: bitrate register
- *   TWDR: data register
- */
-
-/*
- * Example:
- * 
- * #include "twi.h"
- * 
- * int main(void) {
- *   unsigned char i = 0;
- * 
- *   twi_set(TWI_ACKNOWLEDGE | TWI_STOP_CONDITION);
- *   twi_bitrate(100);
- *   twi_addr(TWI_ADDR_GENERAL);
- *   twi_signal(TWI_INT);
- *   twi_en();
- * 
- *   for (;;) {
- *     twi_wait();
- *     twi_data(i++);
- *   }
- * 
- *   return 0;
- * }
- * 
- * ISR_TWI() {}
+ *   TWBR: TWI bitrate register
+ *   TWDR: TWI data register
  */
 
 
@@ -93,7 +59,7 @@
 #define TWI_ADDR_GENERAL  b1(TWGCE)
 
 /* two wire interface macro routines */
-#define twi_set(cnt)         {out(TWSR, cnt); out(TWCR, (cnt)>>8);}  /* set TWI */
+#define twi_set(cnt)         {out(TWSR, (cnt)&0xFF); out(TWCR, (cnt)>>8);}  /* set TWI */
 #define twi_signal(sgn)      smi(TWCR, sgn)             /* TWI enable signals */
 #define twi_addr(adr)        out(TWAR, adr)             /* set TWI address register (slave) */
 #define twi_bitrate(btr)     out(TWBR, (F_CPU/1000l/(btr)>=16)? ((F_CPU/1000l/(btr)-16)/2): (F_CPU/1000l/(btr)))  /* set TWI bitrate (KHz) (max: 400KHz) (master) */
@@ -110,6 +76,30 @@
 
 /* two wire interface interrupt service routine */
 #define ISR_TWI()  ISR(TWI_vect)
+
+
+#ifdef _TWI_H_TEST_
+
+int main(void) {
+	uint8_t i = 0;
+
+	twi_set(TWI_ACKNOWLEDGE | TWI_STOP_CONDITION);
+	twi_bitrate(100);
+	twi_addr(TWI_ADDR_GENERAL);
+	twi_signal(TWI_INT);
+	twi_en();
+
+	for (;;) {
+		twi_wait();
+		twi_data(i++);
+	}
+
+	return 0;
+}
+
+ISR_TWI() {}
+
+#endif /* _TWI_H_TEST_*/
 
 
 #endif /* _TWI_H_ */

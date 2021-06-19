@@ -2,57 +2,27 @@
  * Serial peripheral interface
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        SPCR: SPI control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^ ^ ^ ^ ^ \+/
- *   | | | | | |  +---- SPR1,0: clock rate
- *   | | | | | +------- CPHA: clock Phase
- *   | | | | +--------- CPOL: clock polarity
- *   | | | +----------- MSTR: master/slave select
- *   | | +------------- DORD: data order
- *   | +--------------- SPE: enable
- *   +----------------- SPIE: interrupt enable
+ *   SPCR: SPI control register
+ *     0,1 -> SPR0,1: clock rate
+ *     2 -> CPHA: clock Phase
+ *     3 -> CPOL: clock polarity
+ *     4 -> MSTR: master/slave select
+ *     5 -> DORD: data order
+ *     6 -> SPE: enable
+ *     7 -> SPIE: interrupt enable
  * 
- *        SPSR: SPI status register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *   ^ ^           ^
- *   | |           +--- SPI2X: double speed
- *   | +--------------- WCOL: write collision flag
- *   +----------------- SPIF: interrupt flag
+ *   SPSR: SPI status register
+ *     0 -> SPI2X: double speed
+ *     6 -> WCOL: write collision flag
+ *     7 -> SPIF: interrupt flag
  * 
- *   SPDR: data register
- */
-
-/*
- * Example:
- * 
- * #include "spi.h"
- * 
- * int main(void) {
- *   unsigned char i = 0;
- * 
- *   spi_set(SPI_MASTER | SPI_CK_DIV64);
- *   spi_signal(SPI_INT_STC);
- *   spi_en();
- *   sei();
- * 
- *   for (;;) {
- *     spi_wait();
- *     spi_data(i++);
- *   }
- * 
- *   return 0;
- * }
- * 
- * ISR_SPI_STC() {}
+ *   SPDR: SPI data register
  */
 
 
@@ -88,7 +58,7 @@
 
 
 /* SPI macro routines */
-#define spi_set(cnt)        {out(SPCR, cnt); out(SPSR, (cnt)>>8);}  /* set SPI */
+#define spi_set(cnt)        {out(SPCR, (cnt)&0xFF); out(SPSR, (cnt)>>8);}  /* set SPI */
 #define spi_signal(sgn)     smi(SPCR, sgn)            /* SPI enable signals */
 #define spi_en()            sbi(SPCR, SPE)            /* SPI enable */
 #define spi_di()            cbi(SPCR, SPE)            /* SPI disable */
@@ -100,6 +70,29 @@
 
 /* SPI serial transfer complete interrupt service routine */
 #define ISR_SPI_STC()  ISR(SPI_STC_vect)
+
+
+#ifdef _SPI_H_TEST_
+
+int main(void) {
+	uint8_t i = 0;
+
+	spi_set(SPI_MASTER | SPI_CK_DIV64);
+	spi_signal(SPI_INT_STC);
+	spi_en();
+	sei();
+
+	for (;;) {
+		spi_wait();
+		spi_data(i++);
+	}
+
+	return 0;
+}
+
+ISR_SPI_STC() {}
+
+#endif /* _SPI_H_TEST_ */
 
 
 #endif /* _SPI_H_ */

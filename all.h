@@ -2,7 +2,7 @@
  * All header files
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 
@@ -19,7 +19,6 @@
 #include "irq.h"
 #include "other.h"
 #include "pio.h"
-#include "reset.h"
 #include "sleep.h"
 #include "spi.h"
 #include "spm.h"

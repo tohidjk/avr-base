@@ -2,46 +2,20 @@
  * Eeprom memory
  * Copyright (C) 2013-2021 Tohid Jafarzadeh <tohid.jk@gmail.com>
  * License GNU GPLv2
- * 2021-06-12 BETA
+ * 2021-06-19 BETA
  */
 
 /**
  * Registers:
  * 
- *        EECR: eeprom control register
- *   /------+------\
- *   7 6 5 4 3 2 1 0
- *           ^ ^ ^ ^
- *           | | | +--- EERE: read enable
- *           | | +----- EEWE: write enable
- *           | +------- EEMWE: master write enable
- *           +--------- EERIE: ready interrupt enable
+ *   EECR: eeprom control register
+ *     0 -> EERE: read enable
+ *     1 -> EEWE: write enable
+ *     2 -> EEMWE: master write enable
+ *     3 -> EERIE: ready interrupt enable
  * 
- *   EEAR=EEARL+EEARH: address register
- *   EEDR: data register
- */
-
-/*
- * Example:
- * 
- * #include <avr/io.h>
- * #include <util/delay.h>
- * #include "eep.h"
- * 
- * EEPMEM unsigned char i = 0;
- * 
- * int main(void) {
- *   PORTB = 0;
- *   DDRB = ~0;
- * 
- *   for (;;) {
- *     PORTB = eep_read_byte(&i);
- *     eep_write_byte(&i, PORTB+1);
- *     _delay_ms(500);
- *   }
- * 
- *   return 0;
- * }
+ *   EEAR=EEARL+EEARH: eeprom address register
+ *   EEDR: eeprom data register
  */
 
 
@@ -68,12 +42,34 @@
 #define eep_write()      smi(EECR, b1(EEMWE)|b1(EEWE))  /* eeprom write data to address */
 #define eep_wait()       wait_set_bit(EECR, EEWE)       /* wait to eeprom write enable */
 
-#define eep_write_byte(adr, vlu)  {eep_wait(); eep_addr(adr); eep_data(vlu); eep_write();}
-#define eep_read_byte(adr)        ({eep_wait(); eep_addr(adr); eep_read(); eep_data_get();})
+#define eep_write_byte(adr, vlu)  {eep_wait(); eep_addr((uint16_t)adr); eep_data(vlu); eep_write();}
+#define eep_read_byte(adr)        ({eep_wait(); eep_addr((uint16_t)adr); eep_read(); eep_data_get();})
 
 
 /* eeprom ready interrupt service routine */
 #define ISR_EEP_RDY()  ISR(EE_RDY_vect)
+
+
+#ifdef _EEP_H_TEST_
+
+#include <util/delay.h>
+
+EEPMEM uint8_t i = 0;
+
+int main(void) {
+	PORTB = 0;
+	DDRB = ~0;
+
+	for (;;) {
+		PORTB = eep_read_byte(&i);
+		eep_write_byte(&i, PORTB+1);
+		_delay_ms(500);
+	}
+
+	return 0;
+}
+
+#endif /* _EEP_H_TEST_ */
 
 
 #endif /* _EEP_H_ */
